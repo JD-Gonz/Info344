@@ -1,0 +1,16 @@
+<html>
+
+<head>
+
+<title>NBA Player Stats</title>
+
+</head>
+
+<form action="result.php" Method="post">
+	<input name="name" Type="text">
+	<input type="submit">
+
+
+</form>
+
+</html>

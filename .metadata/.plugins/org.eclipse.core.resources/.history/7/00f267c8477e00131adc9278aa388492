@@ -1,0 +1,10 @@
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sized {
+	width: 80%;
+	heith: 80%;
+}
