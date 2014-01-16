@@ -1,0 +1,12 @@
+<?php
+$name = $_POST["name"];
+
+// Connects to your Database
+mysql_connect("info344.cf9rvll9cbvo.us-west-2.rds.amazonaws.com:3306", "info344user", "Godspeed23") or die(mysql_error());
+mysql_select_db("innodb") or die(mysql_error());
+mysql_query("CREATE TABLE tablename ( name VARCHAR(30),
+ age INT, car VARCHAR(30))");
+Print "YOU ROCK";
+
+
+?>

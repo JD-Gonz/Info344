@@ -1,0 +1,13 @@
+<?php
+$name = $_POST["name"];
+
+echo $name;
+
+// Connects to your Database
+mysql_connect("info344.cf9rvll9cbvo.us-west-2.rds.amazonaws.com:3306", "info344user", "Godspeed23") or die(mysql_error());
+mysql_select_db("innodb") or die(mysql_error());
+
+Print "YOU ROCK";
+
+
+?>
