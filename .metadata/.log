@@ -882,3 +882,431 @@ Binding(ALT+CTRL+H,
 
 !ENTRY org.eclipse.dltk.core 2 0 2014-01-15 18:08:55.707
 !MESSAGE Error decoding problem idenfier "1073741824"
+!SESSION 2014-01-17 14:44:35.873 -----------------------------------------------
+eclipse.buildId=4.3.0.M20130911-1000
+java.version=1.7.0_25
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product C:\wamp\www\PA1\index.php
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product C:\wamp\www\PA1\index.php
+
+!ENTRY org.eclipse.core.resources 2 10035 2014-01-17 14:44:57.919
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY org.eclipse.php.core 4 4 2014-01-17 14:45:05.997
+!MESSAGE Problems encountered while deleting files.
+!STACK 1
+org.eclipse.core.runtime.CoreException: Problems encountered while deleting files.
+	at org.eclipse.core.internal.filesystem.local.LocalFile.delete(LocalFile.java:131)
+	at org.eclipse.php.internal.core.language.LanguageModelContainer.copyToInstanceLocation(LanguageModelContainer.java:116)
+	at org.eclipse.php.internal.core.language.LanguageModelContainer.getBuildpathEntries(LanguageModelContainer.java:62)
+	at org.eclipse.php.internal.core.language.LanguageModelContainer.getBuildpathEntries(LanguageModelContainer.java:142)
+	at org.eclipse.dltk.internal.core.ModelManager.containerPutIfInitializingWithSameEntries(ModelManager.java:2233)
+	at org.eclipse.dltk.internal.core.SetContainerOperation.executeOperation(SetContainerOperation.java:52)
+	at org.eclipse.dltk.internal.core.ModelOperation.run(ModelOperation.java:698)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2345)
+	at org.eclipse.dltk.internal.core.ModelOperation.runOperation(ModelOperation.java:773)
+	at org.eclipse.dltk.core.DLTKCore.setBuildpathContainer(DLTKCore.java:1942)
+	at org.eclipse.php.internal.core.language.LanguageModelInitializer.initialize(LanguageModelInitializer.java:118)
+	at org.eclipse.dltk.internal.core.ModelManager.initializeContainer(ModelManager.java:1976)
+	at org.eclipse.dltk.internal.core.ModelManager$9.run(ModelManager.java:1925)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2345)
+	at org.eclipse.dltk.internal.core.ModelManager.initializeAllContainers(ModelManager.java:1934)
+	at org.eclipse.dltk.internal.core.ModelManager.getBuildpathContainer(ModelManager.java:1804)
+	at org.eclipse.dltk.core.DLTKCore.getBuildpathContainer(DLTKCore.java:1779)
+	at org.eclipse.dltk.internal.core.ExternalProjectFragment.getBuildpathEntry(ExternalProjectFragment.java:319)
+	at org.eclipse.dltk.internal.core.ProjectFragment.fullInclusionPatternChars(ProjectFragment.java:434)
+	at org.eclipse.dltk.internal.core.ExternalProjectFragment.computeChildren(ExternalProjectFragment.java:72)
+	at org.eclipse.dltk.internal.core.ProjectFragment.buildStructure(ProjectFragment.java:129)
+	at org.eclipse.dltk.internal.core.Openable.generateInfos(Openable.java:195)
+	at org.eclipse.dltk.internal.core.ModelElement.openWhenClosed(ModelElement.java:196)
+	at org.eclipse.dltk.internal.core.ModelElement.getElementInfo(ModelElement.java:183)
+	at org.eclipse.dltk.internal.core.ModelElement.getChildren(ModelElement.java:368)
+	at org.eclipse.dltk.internal.core.ModelElement.getChildren(ModelElement.java:363)
+	at org.eclipse.dltk.internal.core.ModelElement.accept(ModelElement.java:739)
+	at org.eclipse.dltk.internal.core.index2.ExternalProjectFragmentRequest.getExternalSourceModules(ExternalProjectFragmentRequest.java:74)
+	at org.eclipse.dltk.internal.core.index2.ExternalProjectFragmentRequest.run(ExternalProjectFragmentRequest.java:51)
+	at org.eclipse.dltk.core.search.indexing.AbstractJob.execute(AbstractJob.java:76)
+	at org.eclipse.dltk.internal.core.search.processing.JobManager.run(JobManager.java:467)
+	at java.lang.Thread.run(Unknown Source)
+Contains: Could not delete: C:\Users\iguest\Documents\Info344\.metadata\.plugins\org.eclipse.php.core\__language__\a377a392.
+!SUBENTRY 1 org.eclipse.core.filesystem 4 273 2014-01-17 14:45:06.014
+!MESSAGE Problems encountered while deleting files.
+!SUBENTRY 2 org.eclipse.core.filesystem 4 273 2014-01-17 14:45:06.015
+!MESSAGE Could not delete: C:\Users\iguest\Documents\Info344\.metadata\.plugins\org.eclipse.php.core\__language__\a377a392.
+
+!ENTRY org.eclipse.egit.ui 2 0 2014-01-17 14:45:20.408
+!MESSAGE Warning: EGit couldn't detect the installation path "gitPrefix" of native Git. Hence EGit can't respect system level
+Git settings which might be configured in ${gitPrefix}/etc/gitconfig under the native Git installation directory.
+The most important of these settings is core.autocrlf. Git for Windows by default sets this parameter to true in
+this system level configuration. The Git installation location can be configured on the
+Team > Git > Configuration preference page's 'System Settings' tab.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.egit.ui 2 0 2014-01-17 14:45:20.411
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\iguest'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.jface 2 0 2014-01-17 14:45:22.112
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2014-01-17 14:45:22.112
+!MESSAGE A conflict occurred for CTRL+SHIFT+F:
+Binding(CTRL+SHIFT+F,
+	ParameterizedCommand(Command(org.eclipse.wst.sse.ui.format.document,Format,
+		Format selection,
+		Category(org.eclipse.ui.category.edit,Edit,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@7bbd695a,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.wst.sse.ui.structuredTextEditorScope,,,system)
+Binding(CTRL+SHIFT+F,
+	ParameterizedCommand(Command(org.eclipse.wst.sse.ui.format.document,Format,
+		Format selection,
+		Category(org.eclipse.ui.category.edit,Edit,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@7bbd695a,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.php.ui.phpEditorScope,,,system)
+Binding(CTRL+SHIFT+F,
+	ParameterizedCommand(Command(org.eclipse.wst.sse.ui.format.document,Format,
+		Format selection,
+		Category(org.eclipse.ui.category.edit,Edit,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@7bbd695a,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.dltk.ui.context.views,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2014-01-17 14:45:22.112
+!MESSAGE A conflict occurred for ALT+SHIFT+R:
+Binding(ALT+SHIFT+R,
+	ParameterizedCommand(Command(org.eclipse.dltk.ui.edit.text.script.rename.element,Rename - Refactoring ,
+		Rename the selected element,
+		Category(org.eclipse.dltk.ui.category.refactoring,Refactor - DLTK,DLTK Refactoring Actions,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@afb1444,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.dltk.ui.context.views,,,system)
+Binding(ALT+SHIFT+R,
+	ParameterizedCommand(Command(org.eclipse.dltk.ui.edit.text.script.rename.element,Rename - Refactoring ,
+		Rename the selected element,
+		Category(org.eclipse.dltk.ui.category.refactoring,Refactor - DLTK,DLTK Refactoring Actions,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@afb1444,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.php.ui.phpEditorScope,,,system)
+Binding(ALT+SHIFT+R,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.rename.element,Rename - Refactoring ,
+		Rename the selected element,
+		Category(org.eclipse.jdt.ui.category.refactoring,Refactor - Java,Java Refactoring Actions,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@69ef81fd,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2014-01-17 14:45:22.112
+!MESSAGE A conflict occurred for ALT+SHIFT+V:
+Binding(ALT+SHIFT+V,
+	ParameterizedCommand(Command(org.eclipse.php.ui.edit.text.move.element,Move - Refactoring ,
+		Moves the selected element to a new location,
+		Category(org.eclipse.php.ui.category.refactoring,Refactor - PHP,PHP Refactoring Actions,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@6b3f3f60,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.dltk.ui.context.views,,,system)
+Binding(ALT+SHIFT+V,
+	ParameterizedCommand(Command(org.eclipse.php.ui.edit.text.move.element,Move - Refactoring ,
+		Moves the selected element to a new location,
+		Category(org.eclipse.php.ui.category.refactoring,Refactor - PHP,PHP Refactoring Actions,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@6b3f3f60,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.php.ui.phpEditorScope,,,system)
+Binding(ALT+SHIFT+V,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.move.element,Move - Refactoring ,
+		Move the selected element to a new location,
+		Category(org.eclipse.jdt.ui.category.refactoring,Refactor - Java,Java Refactoring Actions,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@559eea2,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2014-01-17 14:45:22.112
+!MESSAGE A conflict occurred for F3:
+Binding(F3,
+	ParameterizedCommand(Command(org.eclipse.wst.sse.ui.open.file.from.source,Open Selection,
+		Open an editor on the selected link,
+		Category(org.eclipse.ui.category.edit,Edit,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@5341d06c,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.wst.sse.ui.structuredTextEditorScope,,,system)
+Binding(F3,
+	ParameterizedCommand(Command(org.eclipse.php.ui.edit.text.open.editor,Open Selection,
+		Opens an editor with the selected element,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@5da8d28,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.php.ui.phpEditorScope,,,system)
+Binding(F3,
+	ParameterizedCommand(Command(org.eclipse.php.ui.edit.text.open.editor,Open Selection,
+		Opens an editor with the selected element,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@5da8d28,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.dltk.ui.context.views,,,system)
+Binding(F3,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.open.editor,Open Declaration,
+		Open an editor on the selected element,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@4f694018,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2014-01-17 14:45:22.112
+!MESSAGE A conflict occurred for CTRL+SHIFT+M:
+Binding(CTRL+SHIFT+M,
+	ParameterizedCommand(Command(org.eclipse.php.ui.navigate.open.method,Opens a method in a PHP editor,
+		Opens a method in a PHP editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@6ef1063,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.php.ui.phpEditorScope,,,system)
+Binding(CTRL+SHIFT+M,
+	ParameterizedCommand(Command(org.eclipse.php.ui.navigate.open.method,Opens a method in a PHP editor,
+		Opens a method in a PHP editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@6ef1063,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.dltk.ui.context.views,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2014-01-17 14:45:22.112
+!MESSAGE A conflict occurred for CTRL+SHIFT+T:
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.php.ui.navigate.open.type,Open Type,
+		Opens a type in a PHP editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@391cd723,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.php.ui.phpEditorScope,,,system)
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.php.ui.navigate.open.type,Open Type,
+		Opens a type in a PHP editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@391cd723,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.dltk.ui.context.views,,,system)
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@14705820,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2014-01-17 14:45:22.112
+!MESSAGE A conflict occurred for F4:
+Binding(F4,
+	ParameterizedCommand(Command(org.eclipse.php.ui.edit.text.php.open.type.hierarchy,Open Type Hierarchy,
+		Opens a type hierarchy for the selected element,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@5ba9a75b,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.dltk.ui.context.views,,,system)
+Binding(F4,
+	ParameterizedCommand(Command(org.eclipse.php.ui.edit.text.php.open.type.hierarchy,Open Type Hierarchy,
+		Opens a type hierarchy for the selected element,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@5ba9a75b,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.php.ui.phpEditorScope,,,system)
+Binding(F4,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.open.type.hierarchy,Open Type Hierarchy,
+		Open a type hierarchy on the selected element,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@5f2a7660,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2014-01-17 14:45:22.112
+!MESSAGE A conflict occurred for CTRL+N:
+Binding(CTRL+N,
+	ParameterizedCommand(Command(org.eclipse.ui.newWizard,New,
+		Open the New item wizard,
+		Category(org.eclipse.ui.category.file,File,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@251a789e,
+		[Lorg.eclipse.e4.ui.internal.workbench.Parameter;@6ce4e019,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(CTRL+N,
+	ParameterizedCommand(Command(org.eclipse.php.ui.newWizard,New,
+		Open the New item wizard,
+		Category(org.eclipse.ui.category.file,File,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@5cc1c96f,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.php.ui.phpEditorScope,,,system)
+Binding(CTRL+N,
+	ParameterizedCommand(Command(org.eclipse.php.ui.newWizard,New,
+		Open the New item wizard,
+		Category(org.eclipse.ui.category.file,File,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@5cc1c96f,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.dltk.ui.context.views,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2014-01-17 14:45:22.112
+!MESSAGE A conflict occurred for CTRL+SHIFT+H:
+Binding(CTRL+SHIFT+H,
+	ParameterizedCommand(Command(org.eclipse.php.ui.navigate.open.type.in.hierarchy,Open Type in Hierarchy,
+		Opens a type in the type hierarchy view,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@368fc5fc,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.dltk.ui.context.views,,,system)
+Binding(CTRL+SHIFT+H,
+	ParameterizedCommand(Command(org.eclipse.php.ui.navigate.open.type.in.hierarchy,Open Type in Hierarchy,
+		Opens a type in the type hierarchy view,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@368fc5fc,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.php.ui.phpEditorScope,,,system)
+Binding(CTRL+SHIFT+H,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type.in.hierarchy,Open Type in Hierarchy,
+		Open a type in the type hierarchy view,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@190f3f60,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2014-01-17 14:45:22.112
+!MESSAGE A conflict occurred for ALT+CTRL+H:
+Binding(ALT+CTRL+H,
+	ParameterizedCommand(Command(org.eclipse.php.ui.edit.text.php.open.call.hierarchy,Open Call Hierarchy,
+		Opens a call hierarchy for the selected element,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@3809c47a,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.dltk.ui.context.views,,,system)
+Binding(ALT+CTRL+H,
+	ParameterizedCommand(Command(org.eclipse.php.ui.edit.text.php.open.call.hierarchy,Open Call Hierarchy,
+		Opens a call hierarchy for the selected element,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@3809c47a,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.php.ui.phpEditorScope,,,system)
+Binding(ALT+CTRL+H,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.open.call.hierarchy,Open Call Hierarchy,
+		Open a call hierarchy on the selected element,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@9424254,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+
+!ENTRY org.eclipse.php.ui 4 10001 2014-01-17 16:55:12.140
+!MESSAGE PHP ui plugin internal error
+!STACK 0
+org.eclipse.jface.text.BadLocationException: offset 703 is out of [0, 38]
+	at org.eclipse.php.internal.core.documentModel.parser.regions.PhpTokenContainer.checkBadLocation(PhpTokenContainer.java:453)
+	at org.eclipse.php.internal.core.documentModel.parser.regions.PhpTokenContainer.getToken(PhpTokenContainer.java:59)
+	at org.eclipse.php.internal.core.documentModel.parser.regions.PhpTokenContainer.getTokens(PhpTokenContainer.java:105)
+	at org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion.getPhpTokens(PhpScriptRegion.java:105)
+	at org.eclipse.php.internal.core.format.DefaultIndentationStrategy.lineContainIncompleteBlock(DefaultIndentationStrategy.java:486)
+	at org.eclipse.php.internal.core.format.DefaultIndentationStrategy.isIndentationBase(DefaultIndentationStrategy.java:323)
+	at org.eclipse.php.internal.core.format.DefaultIndentationStrategy.getIndentationBaseLine(DefaultIndentationStrategy.java:110)
+	at org.eclipse.php.internal.core.format.DefaultIndentationStrategy.placeMatchingBlanksForStructuredDocument(DefaultIndentationStrategy.java:646)
+	at org.eclipse.php.internal.core.format.DefaultIndentationStrategy.placeMatchingBlanksForStructuredDocument(DefaultIndentationStrategy.java:577)
+	at org.eclipse.php.internal.ui.autoEdit.PHPAutoIndentStrategy.smartPaste(PHPAutoIndentStrategy.java:89)
+	at org.eclipse.php.internal.ui.autoEdit.PHPAutoIndentStrategy.customizeDocumentCommand(PHPAutoIndentStrategy.java:61)
+	at org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy.customizeDocumentCommand(MainAutoEditStrategy.java:67)
+	at org.eclipse.jface.text.TextViewer.customizeDocumentCommand(TextViewer.java:3779)
+	at org.eclipse.jface.text.TextViewer.handleVerifyEvent(TextViewer.java:3816)
+	at org.eclipse.jface.text.source.projection.ProjectionViewer.handleVerifyEvent(ProjectionViewer.java:1276)
+	at org.eclipse.wst.sse.ui.internal.StructuredTextViewer.handleVerifyEvent(StructuredTextViewer.java:769)
+	at org.eclipse.jface.text.TextViewer$TextVerifyListener.verifyText(TextViewer.java:435)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:273)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:84)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1057)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1081)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1066)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:778)
+	at org.eclipse.swt.custom.StyledText.modifyContent(StyledText.java:7166)
+	at org.eclipse.swt.custom.StyledText.sendKeyEvent(StyledText.java:8030)
+	at org.eclipse.swt.custom.StyledText.paste(StyledText.java:7254)
+	at org.eclipse.jface.text.TextViewer.paste(TextViewer.java:4086)
+	at org.eclipse.jface.text.TextViewer.doOperation(TextViewer.java:4024)
+	at org.eclipse.jface.text.source.SourceViewer.doOperation(SourceViewer.java:1018)
+	at org.eclipse.jface.text.source.projection.ProjectionViewer.doOperation(ProjectionViewer.java:1507)
+	at org.eclipse.wst.sse.ui.internal.StructuredTextViewer.doOperation(StructuredTextViewer.java:473)
+	at org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer.doOperation(PHPStructuredTextViewer.java:310)
+	at org.eclipse.ui.texteditor.TextOperationAction$1.run(TextOperationAction.java:128)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:70)
+	at org.eclipse.ui.texteditor.TextOperationAction.run(TextOperationAction.java:126)
+	at org.eclipse.jface.action.Action.runWithEvent(Action.java:499)
+	at org.eclipse.jface.commands.ActionHandler.execute(ActionHandler.java:119)
+	at org.eclipse.ui.internal.handlers.E4HandlerProxy.execute(E4HandlerProxy.java:90)
+	at sun.reflect.GeneratedMethodAccessor21.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.e4.core.internal.di.MethodRequestor.execute(MethodRequestor.java:56)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.invokeUsingClass(InjectorImpl.java:243)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.invoke(InjectorImpl.java:224)
+	at org.eclipse.e4.core.contexts.ContextInjectionFactory.invoke(ContextInjectionFactory.java:132)
+	at org.eclipse.e4.core.commands.internal.HandlerServiceHandler.execute(HandlerServiceHandler.java:167)
+	at org.eclipse.core.commands.Command.executeWithChecks(Command.java:499)
+	at org.eclipse.core.commands.ParameterizedCommand.executeWithChecks(ParameterizedCommand.java:508)
+	at org.eclipse.e4.core.commands.internal.HandlerServiceImpl.executeHandler(HandlerServiceImpl.java:213)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.executeCommand(KeyBindingDispatcher.java:285)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.press(KeyBindingDispatcher.java:504)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.processKeyEvent(KeyBindingDispatcher.java:555)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.filterKeySequenceBindings(KeyBindingDispatcher.java:376)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.access$0(KeyBindingDispatcher.java:322)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher$KeyDownFilter.handleEvent(KeyBindingDispatcher.java:84)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:84)
+	at org.eclipse.swt.widgets.Display.filterEvent(Display.java:1262)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1056)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1081)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1066)
+	at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:1108)
+	at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:1104)
+	at org.eclipse.swt.widgets.Widget.wmChar(Widget.java:1525)
+	at org.eclipse.swt.widgets.Control.WM_CHAR(Control.java:4723)
+	at org.eclipse.swt.widgets.Canvas.WM_CHAR(Canvas.java:344)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4611)
+	at org.eclipse.swt.widgets.Canvas.windowProc(Canvas.java:340)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:4977)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessageW(Native Method)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessage(OS.java:2549)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3757)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$9.run(PartRenderingEngine.java:1113)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:997)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:138)
+	at org.eclipse.ui.internal.Workbench$5.run(Workbench.java:610)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:567)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:150)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:124)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:354)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:181)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:636)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:591)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1450)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1426)
