@@ -5,7 +5,7 @@ $password = "Godspeed23";
 
 // Connects to Database and reform query
 try {
-	$conn = new PDO('mysql:host=info344.cf9rvll9cbvo.us-west-2.rds.amazonaws.com:3306;dbname=innodb', $username, $password);
+	$conn = new PDO('mysql:host=info344.cf9rvll9cbvo.us-west-2.rds.amazonaws.com:3306;dbname=mydb', $username, $password);
 	$stmt = $conn->prepare("SELECT * FROM PlayerStats WHERE PlayerName like '%$name%'");
 	$stmt -> execute(array());
 } catch(PDOException $e) {
