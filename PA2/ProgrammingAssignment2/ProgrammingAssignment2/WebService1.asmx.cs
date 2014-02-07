@@ -24,149 +24,40 @@ namespace ProgrammingAssignment2
     // [System.Web.Script.Services.ScriptService]
     public class WebService1 : System.Web.Services.WebService
     {
-
         public static Trie library;
-        private static int characterIndex = -1;
         private static int maxlength = 10;
-
+        
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string querySuggestions(string word)
         {
-            string[] json = new string[10];
-            for (int i = 0; i < maxlength; i++)
-            {
-                json[i] = getSuggestion(word);
-            }
+            string[] json = getSuggestions(word);
             return new JavaScriptSerializer().Serialize(json);
         }
 
-        public class Trie
+        public string[] getSuggestions(string word)
         {
-            public class Node
-            {
-                public string Word;
-                public bool IsTerminal { get { return Word != null; } }
-                public Dictionary<char, Node> Edges = new Dictionary<char, Node>();
-            }
-
-            public Node Root = new Node();
-
-            public Trie(string[] words)
-            {
-                for (int i = 0; i < words.Length; i++)
-                {
-                    string word = words[i];
-                    Node node = Root;
-                    for (int index = 0; index < word.Length; index++)
-                    {
-                        char letter = word[index];
-                        Node next;
-                        if (!node.Edges.TryGetValue(letter, out next))
-                        {
-                            next = new Node();
-                            if (index + 1 == word.Length)
-                            {
-                                next.Word = word;
-                            }
-                            node.Edges.Add(letter, next);
-                        }
-                        node = next;
-                    }
-                }
-            }
+            if (library.Root == null)
+                return null;
+           return library.traverseTrie(word, library.Root, maxlength);    
         }
 
-        public string invalidCharacterFilter(string filter)
-        {
-            string reconstructedWord = "";
-            foreach (char ascii in filter)
-            {
-                bool isAscii = true;
-                if (ascii != 32 && (ascii < 65 || ascii > 91) && (ascii < 97 || ascii > 122))
-                    isAscii = false;
-
-                if (isAscii)
-                    reconstructedWord += ascii;
-            }
-            return reconstructedWord;
-        }
 
         [WebMethod]
         public void populateTrie(string filepath)
         {
+            library = new Trie();
             List<string> wordlibrary = new List<string>();
             using (StreamReader sr = new StreamReader(filepath))
             {
                 while (sr.EndOfStream == false)
                 {
-                    string word = sr.ReadLine();
-                    for (int i = 0; i < word.Length; i++)
-                    {
-                        word = invalidCharacterFilter(word);
-                    }
-                    wordlibrary.Add(word);
+                    string line = sr.ReadLine();
+                        line = library.formatLine(line);
+                    wordlibrary.Add(line);
                 }
             }
             library = new Trie(wordlibrary.ToArray());
-        }
-
-        private string getSuggestion(string word)
-        {
-            if (library.Root == null)
-                return "";
-
-            if (library.Root.IsTerminal)
-                return word;
-
-            Trie.Node suggestion = traverseTrie(word, library.Root);
-            if (suggestion != null)
-                return suggestion.Word;
-            else return "No results found.";
-        }
-
-        private char getAlphabeticalKey(Trie.Node element)
-        {
-            char[] array = element.Edges.Keys.ToArray();
-
-            if (array.Length < 10)
-                maxlength = array.Length;
-            else maxlength = 10;
-            if (characterIndex == maxlength)
-                characterIndex = -1;
-            characterIndex++;
-            return array[characterIndex];
-        }
-
-        private Trie.Node traverseTrie(string userInput, Trie.Node element)
-        {
-            if (element.IsTerminal)
-                return element;
-            else
-            {
-                // Runs recursively up to the length of user input
-                if (userInput.Length != 0)
-                {
-                    Trie.Node value;
-                    if (element.Edges.TryGetValue(userInput[0], out value))
-                    {
-                        Trie.Node next = value;
-                        return traverseTrie(userInput.Substring(1), next);
-                    }
-                    else return value;
-                }
-                // Suggests new things here
-                else
-                {
-                    Trie.Node value;
-                    char nextLetter = getAlphabeticalKey(element);
-                    if (element.Edges.TryGetValue(nextLetter, out value))
-                    {
-                        return traverseTrie(userInput, value);
-                    }
-                    else return value;
-                }
-            }
         }
 
         [WebMethod]

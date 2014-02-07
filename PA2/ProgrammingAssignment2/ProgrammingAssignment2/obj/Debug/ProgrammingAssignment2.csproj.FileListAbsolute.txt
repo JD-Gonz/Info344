@@ -1,0 +1,11 @@
+C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\bin\ProgrammingAssignment2.dll.config
+C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\bin\ProgrammingAssignment2.dll
+C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\bin\ProgrammingAssignment2.pdb
+C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\bin\Microsoft.WindowsAzure.Storage.dll
+C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\bin\Microsoft.Data.OData.dll
+C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\bin\Microsoft.Data.Edm.dll
+C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\bin\System.Spatial.dll
+C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\bin\Microsoft.WindowsAzure.Storage.xml
+C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\obj\Debug\ProgrammingAssignment2.csprojResolveAssemblyReference.cache
+C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\obj\Debug\ProgrammingAssignment2.dll
+C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\obj\Debug\ProgrammingAssignment2.pdb
