@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Web;
-using System.Web.Services;
 using System.Configuration;
+using System.Web.Services;
+using System.Web.Script.Services;
+using System.Web.Script.Serialization;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System.Data.SqlClient;
-using System.IO;
 using Microsoft.WindowsAzure.Storage.Table;
-using System.Web.Script.Services;
-using System.Web.Script.Serialization;
+using System.Threading;
+using System.Diagnostics;
+
 
 namespace ProgrammingAssignment2
 {
@@ -22,45 +25,51 @@ namespace ProgrammingAssignment2
     [System.ComponentModel.ToolboxItem(false)]
     // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
     // [System.Web.Script.Services.ScriptService]
+    [ScriptService]
     public class WebService1 : System.Web.Services.WebService
     {
         public static Trie library;
-        private static int maxlength = 10;
         
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string querySuggestions(string word)
         {
-            string[] json = getSuggestions(word);
+            
+            string[] json = library.getSuggestions(word.ToLower());
             return new JavaScriptSerializer().Serialize(json);
-        }
-
-        public string[] getSuggestions(string word)
-        {
-            if (library.Root == null)
-                return null;
-           return library.traverseTrie(word, library.Root, maxlength);    
+           
         }
 
 
         [WebMethod]
-        public void populateTrie(string filepath)
+        public float populateTrie(string filepath)
         {
             library = new Trie();
-            List<string> wordlibrary = new List<string>();
+            PerformanceCounter ramCounter = new PerformanceCounter("Memory", "Available MBytes");
             using (StreamReader sr = new StreamReader(filepath))
             {
+                int count = 0;
+                string text = "";
                 while (sr.EndOfStream == false)
                 {
-                    string line = sr.ReadLine();
-                        line = library.formatLine(line);
-                    wordlibrary.Add(line);
+                    string line = sr.ReadLine().ToLower();
+                    library.insertLine(line);
+
+                    if (count == 1000)
+                    {
+                        count = 0;
+                        if (ramCounter.NextValue() < 5000)
+                            break;
+                    }
+                    
                 }
+                return ramCounter.NextValue();
             }
-            library = new Trie(wordlibrary.ToArray());
+
         }
 
         [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string downloadBlob()
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
@@ -80,9 +89,38 @@ namespace ProgrammingAssignment2
                         }
                     }
                 }
-                return file;
+                
+                return new JavaScriptSerializer().Serialize(file + "\\blob.txt");
             }
             else return "failure";
+        }
+
+        [WebMethod]
+        public void preprocessFile()
+        {
+            using (StreamReader sr = new StreamReader("G:\\classes\\INFO 344\\PA2\\WebsiteTitles.txt"))
+            using (StreamWriter sw = new StreamWriter("G:\\classes\\INFO 344\\PA2\\ProccessedTitlesMed.txt"))
+            {
+                while (sr.EndOfStream == false)
+                {
+                    string line = sr.ReadLine();
+                    string reconstructedline = "";
+                    foreach (char letter in line)
+                    {
+                        if (letter == '_')
+                            reconstructedline += " ";
+                        else if (letter != 32 && (letter < 65 || letter > 90) && (letter < 97 || letter > 122))
+                        {
+                            reconstructedline = null;
+                            break;
+                        }
+                        else
+                            reconstructedline += letter;
+                    }
+                    if (reconstructedline != null)
+                        sw.WriteLine(reconstructedline);
+                }
+            }
         }
     }
 }

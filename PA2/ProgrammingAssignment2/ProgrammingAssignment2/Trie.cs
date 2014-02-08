@@ -10,81 +10,79 @@ namespace ProgrammingAssignment2
     public class Trie
     {
         private static int length;
+        private int index;
+        private TrieNode root;
 
-        public TrieNode Root = new TrieNode();
-
-        public Trie() { }
-
-        public Trie(string[] words)
+        public Trie() 
         {
-            for (int i = 0; i < words.Length; i++)
+            length = 10;
+            index = -1;
+            root = new TrieNode();
+        }
+
+        public void insertLine(string line)
+        {
+            TrieNode node = root;
+            for (int i = 0; i < line.Length; i++)
             {
-                string line = words[i];
-                TrieNode node = Root;
-                for (int j = 0; j < line.Length; j++)
+                char letter = line[i];
+                TrieNode next;
+                if (!node.Edges.TryGetValue(letter, out next))
                 {
-                    char letter = line[j];
-                    TrieNode next;
-                    if (!node.Edges.TryGetValue(letter, out next))
+                    next = new TrieNode();
+                    if (i + 1 == line.Length)
                     {
-                        next = new TrieNode();
-                        if (j + 1 == line.Length)
-                        {
-                            next.Word = line;
-                        }
-                        node.Edges.Add(letter, next);
+                        next.Word = line;
                     }
-                    node = next;
+                    node.Edges.Add(letter, next);
                 }
+                node = next;
             }
         }
 
-        public string formatLine(string line)
+        public string[] getSuggestions(string word)
         {
-            string reconstructedline = "";
-            foreach (char letter in line)
-            {
-                if (letter == '_')
-                    reconstructedline += " ";
-                else
-                    reconstructedline += letter;
-            }
-            return reconstructedline;
-        }
-
-        public string[] traverseTrie(string userInput, TrieNode element, int maxlength)
-        {
-            length = maxlength;
             List<string> results = new List<string>();
-            results = traverseTrieHelper(userInput, element, results);
-            String[] array = results.ToArray();
-            return array;
+            results = traverseTrie(word, root, results);
+            string[] json = results.ToArray();
+            return json;
         }
 
-        private List<string> traverseTrieHelper(string userInput, TrieNode element, List<string> results)
+        private List<string> traverseTrie(string userInput, TrieNode element, List<string> results)
         {
-            // Runs recursively up to the length of user input
-            if (userInput.Length > 1)
-            {
-                TrieNode value;
-                if (element.Edges.TryGetValue(Char.ToUpper(userInput[0]), out value) || element.Edges.TryGetValue(Char.ToLower(userInput[0]), out value))
-                {
-                    return traverseTrieHelper(userInput.Substring(1), value, results);
-                }
-                else 
-                    return results;
-            }
-             else
+            if (results.Count == length)
+                return results;
+            else
+            {// Runs recursively up to the length of user input
+                if (userInput.Length != 0)
                 {
                     TrieNode value;
-                    if (element.Edges.TryGetValue(userInput[0], out value) && value.IsTerminal)
+                    if (element.Edges.TryGetValue(userInput[0], out value))
                     {
-                        results.Add(value.Word);
-                        return traverseTrieHelper(userInput, value, results);
+                        TrieNode next = value;
+                        return traverseTrie(userInput.Substring(1), next, results);
                     }
-                    else
-                        return results;
+                    else return results;
                 }
+                // Suggests new things here
+                else
+                {
+                    TrieNode value;
+                    char[] keys = element.Edges.Keys.ToArray();
+                    for (int i = 0; i < keys.Length; i++)
+                    {
+                        char nextLetter = (keys[i]);
+                        if (element.Edges.TryGetValue(nextLetter, out value))
+                        {
+                            if (value.IsTerminal && results.Count < length)
+                                results.Add(value.Word);
+                            results = traverseTrie(userInput, value, results);
+                        }
+                    }
+                    return results;
+                }
+            }
+            
         }
     }
 }
