@@ -7,8 +7,7 @@ namespace ProgrammingAssignment2
 {
     public class TrieNode
     {
-            public string Word;
-            public bool IsTerminal { get { return Word != null; } }
+            public bool IsTerminal = false;
             public Dictionary<char, TrieNode> Edges = new Dictionary<char, TrieNode>();
     }
 }

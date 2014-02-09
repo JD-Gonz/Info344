@@ -10,13 +10,11 @@ namespace ProgrammingAssignment2
     public class Trie
     {
         private static int length;
-        private int index;
         private TrieNode root;
 
         public Trie() 
         {
             length = 10;
-            index = -1;
             root = new TrieNode();
         }
 
@@ -32,7 +30,7 @@ namespace ProgrammingAssignment2
                     next = new TrieNode();
                     if (i + 1 == line.Length)
                     {
-                        next.Word = line;
+                        next.IsTerminal = true;
                     }
                     node.Edges.Add(letter, next);
                 }
@@ -43,12 +41,13 @@ namespace ProgrammingAssignment2
         public string[] getSuggestions(string word)
         {
             List<string> results = new List<string>();
-            results = traverseTrie(word, root, results);
+            string prefix = word;
+            results = traverseTrie(word, root, results, prefix);
             string[] json = results.ToArray();
             return json;
         }
 
-        private List<string> traverseTrie(string userInput, TrieNode element, List<string> results)
+        private List<string> traverseTrie(string userInput, TrieNode element, List<string> results, string prefix)
         {
             if (results.Count == length)
                 return results;
@@ -60,7 +59,7 @@ namespace ProgrammingAssignment2
                     if (element.Edges.TryGetValue(userInput[0], out value))
                     {
                         TrieNode next = value;
-                        return traverseTrie(userInput.Substring(1), next, results);
+                        return traverseTrie(userInput.Substring(1), next, results,prefix);
                     }
                     else return results;
                 }
@@ -74,9 +73,10 @@ namespace ProgrammingAssignment2
                         char nextLetter = (keys[i]);
                         if (element.Edges.TryGetValue(nextLetter, out value))
                         {
+                            prefix += nextLetter;
                             if (value.IsTerminal && results.Count < length)
-                                results.Add(value.Word);
-                            results = traverseTrie(userInput, value, results);
+                                results.Add(prefix);
+                            results = traverseTrie(userInput, value, results, prefix);
                         }
                     }
                     return results;

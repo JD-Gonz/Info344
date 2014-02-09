@@ -1,4 +1,4 @@
-﻿function UseJSON() {
+﻿function SearchTrie() {
     var text = $("#text").val();
     if (text == "")
         $('.suggestions').hide();
@@ -26,18 +26,16 @@
                     instance = template.clone();
                     instance.find('.result').html(results[idx]);
                     instance.removeClass('template');
-                    suggestions.fadeIn(500).append(instance);
+                    suggestions.fadeIn(250).append(instance);
                 }
             },
             error: function (data) {
-                suggestions.empty();
-                alert("error");
+                $('.suggestions').empty();
             }
         });
-        suggestions.show();
+        $('.suggestions').show();
     } 
 }
 $(function () {
-
-
+    
 }); //doc ready()

@@ -8,6 +8,7 @@ using System.Web.Services;
 using System.Web.Script.Services;
 using System.Web.Script.Serialization;
 using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System.Data.SqlClient;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -32,6 +33,8 @@ namespace ProgrammingAssignment2
         
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+
+
         public string querySuggestions(string word)
         {
             
@@ -41,29 +44,26 @@ namespace ProgrammingAssignment2
         }
 
 
+
         [WebMethod]
-        public float populateTrie(string filepath)
+        public void populateTrie(string filepath)
         {
             library = new Trie();
-            PerformanceCounter ramCounter = new PerformanceCounter("Memory", "Available MBytes");
-            using (StreamReader sr = new StreamReader(filepath))
+            try 
             {
-                int count = 0;
-                string text = "";
-                while (sr.EndOfStream == false)
+                using (StreamReader sr = new StreamReader(filepath))
                 {
-                    string line = sr.ReadLine().ToLower();
-                    library.insertLine(line);
-
-                    if (count == 1000)
+                    while (sr.EndOfStream == false)
                     {
-                        count = 0;
-                        if (ramCounter.NextValue() < 5000)
-                            break;
+                        string line = sr.ReadLine().ToLower();
+                        library.insertLine(line);   
                     }
-                    
                 }
-                return ramCounter.NextValue();
+            }
+            catch (OutOfMemoryException e)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
             }
 
         }
@@ -92,14 +92,15 @@ namespace ProgrammingAssignment2
                 
                 return new JavaScriptSerializer().Serialize(file + "\\blob.txt");
             }
-            else return "failure";
+            else 
+                return "failure to download blob";
         }
 
         [WebMethod]
         public void preprocessFile()
         {
-            using (StreamReader sr = new StreamReader("G:\\classes\\INFO 344\\PA2\\WebsiteTitles.txt"))
-            using (StreamWriter sw = new StreamWriter("G:\\classes\\INFO 344\\PA2\\ProccessedTitlesMed.txt"))
+            using (StreamReader sr = new StreamReader("F:\\classes\\INFO 344\\PA2\\WebsiteTitlesFull.txt"))
+            using (StreamWriter sw = new StreamWriter("F:\\classes\\INFO 344\\PA2\\ProccessedTitlesLarge.txt"))
             {
                 while (sr.EndOfStream == false)
                 {
