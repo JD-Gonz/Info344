@@ -8,3 +8,4 @@ C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignme
 C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\bin\Microsoft.WindowsAzure.Storage.xml
 C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\obj\Release\ProgrammingAssignment2.dll
 C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\obj\Release\ProgrammingAssignment2.pdb
+C:\Users\iguest\Documents\Info344\PA2\ProgrammingAssignment2\ProgrammingAssignment2\obj\Release\ProgrammingAssignment2.csprojResolveAssemblyReference.cache

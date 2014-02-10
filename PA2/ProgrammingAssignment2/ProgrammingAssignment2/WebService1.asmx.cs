@@ -30,84 +30,13 @@ namespace ProgrammingAssignment2
     public class WebService1 : System.Web.Services.WebService
     {
         public static Trie library;
-        
-        [WebMethod]
-        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-
-
-        public string querySuggestions(string word)
-        {
-            
-            string[] json = library.getSuggestions(word.ToLower());
-            return new JavaScriptSerializer().Serialize(json);
-           
-        }
-
-
+        public static string file;
 
         [WebMethod]
-        public void populateTrie(string filepath)
+        public void preprocessFile(string input, string output)
         {
-            library = new Trie();
-            try 
-            {
-                PerformanceCounter ramCounter = new System.Diagnostics.PerformanceCounter("Memory", "Available MBytes");
-                using (StreamReader sr = new StreamReader(filepath))
-                {
-                    int count = 0;
-                    while (sr.EndOfStream == false)
-                    {
-                        string line = sr.ReadLine().ToLower();
-                        library.insertLine(line);   
-                        count ++;
-                        if (count == 5000 && ramCounter.NextValue() == 100)
-                            break;
-                        else
-                            count = 0;
-                    }
-                }
-            }
-            catch (OutOfMemoryException e)
-            {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-            }
-
-        }
-
-        [WebMethod]
-        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public string downloadBlob()
-        {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
-            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            CloudBlobContainer container = blobClient.GetContainerReference("pa2");
-            if (container.Exists())
-            {
-                string file = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString();
-                foreach (IListBlobItem item in container.ListBlobs(null, false))
-                {
-                    if (item.GetType() == typeof(CloudBlockBlob))
-                    {
-                        CloudBlockBlob blob = (CloudBlockBlob)item;
-                        using (var fs = new FileStream(file + "\\blob.txt", FileMode.OpenOrCreate))
-                        {
-                            blob.DownloadToStream(fs);
-                        }
-                    }
-                }
-                
-                return new JavaScriptSerializer().Serialize(file + "\\blob.txt");
-            }
-            else 
-                return "failure to download blob";
-        }
-
-        [WebMethod]
-        public void preprocessFile()
-        {
-            using (StreamReader sr = new StreamReader("F:\\classes\\INFO 344\\PA2\\WebsiteTitlesFull.txt"))
-            using (StreamWriter sw = new StreamWriter("F:\\classes\\INFO 344\\PA2\\ProccessedTitlesLarge.txt"))
+            using (StreamReader sr = new StreamReader(input))
+            using (StreamWriter sw = new StreamWriter(output))
             {
                 while (sr.EndOfStream == false)
                 {
@@ -130,5 +59,81 @@ namespace ProgrammingAssignment2
                 }
             }
         }
+
+        [WebMethod]
+        public string downloadBlob()
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = blobClient.GetContainerReference("pa2");
+            if (container.Exists())
+            {
+                int count = 0;
+                file = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString();
+                foreach (IListBlobItem item in container.ListBlobs(null, false))
+                {
+                    count++;
+                    if (item.GetType() == typeof(CloudBlockBlob))
+                    {
+                        CloudBlockBlob blob = (CloudBlockBlob)item;
+                        using (var fs = new FileStream(file + "\\blob.txt", FileMode.OpenOrCreate))
+                        {
+                            blob.DownloadToStream(fs);
+                        }
+                    }
+                }
+                return file;
+            }
+            return file;
+        }
+
+        [WebMethod]
+        public string populateTrie(string fileName)
+        {
+            library = new Trie();
+            int count = 0;
+            string message = "";
+            Process proc = Process.GetCurrentProcess();
+            long benchmark = proc.PeakPagedMemorySize64 - 20000000;
+            long peak = proc.PeakPagedMemorySize64;
+            try 
+            {
+                using (StreamReader sr = new StreamReader(fileName))
+                {
+                    while (sr.EndOfStream == false)
+                    {
+                        string line = sr.ReadLine().ToLower();
+                        library.insertLine(line);   
+                        count ++;
+
+                        if (count == 1000 && proc.PrivateMemorySize64 == benchmark)
+                        {
+                            message = "count: " + count + " priateMemory:  " + proc.PrivateMemorySize64 + " benchmark: " + benchmark + " out of " + peak;
+                            break;
+                        }
+                        else if (count == 1000)
+                            count = 0;
+                    }
+                }
+                return message;
+            }
+            catch (OutOfMemoryException e)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                return "count: " + count + " priateMemory:  " + proc.PrivateMemorySize64 + " benchmark: " + benchmark + " out of " + peak;
+            }
+
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string querySuggestions(string word)
+        {
+
+            string[] json = library.getSuggestions(word.ToLower());
+            return new JavaScriptSerializer().Serialize(json);
+
+        }  
     }
 }

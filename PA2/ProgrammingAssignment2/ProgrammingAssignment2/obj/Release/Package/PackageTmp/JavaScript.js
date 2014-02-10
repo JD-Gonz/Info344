@@ -1,4 +1,4 @@
-﻿function UseJSON() {
+﻿function SearchTrie() {
     var text = $("#text").val();
     if (text == "")
         $('.suggestions').hide();
@@ -31,13 +31,11 @@
             },
             error: function (data) {
                 $('.suggestions').empty();
-                alert("error");
             }
         });
         $('.suggestions').show();
     } 
 }
 $(function () {
-
-
+    
 }); //doc ready()
