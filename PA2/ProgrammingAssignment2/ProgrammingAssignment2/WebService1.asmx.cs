@@ -61,7 +61,7 @@ namespace ProgrammingAssignment2
         }
 
         [WebMethod]
-        public string downloadBlob()
+        public void downloadBlob()
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
@@ -82,48 +82,21 @@ namespace ProgrammingAssignment2
                         }
                     }
                 }
-                return file;
             }
-            return file;
         }
 
         [WebMethod]
-        public string populateTrie(string fileName)
+        public void populateTrie()
         {
             library = new Trie();
-            int count = 0;
-            string message = "";
-            Process proc = Process.GetCurrentProcess();
-            long benchmark = proc.PeakPagedMemorySize64 - 20000000;
-            long peak = proc.PeakPagedMemorySize64;
-            try 
+            using (StreamReader sr = File.OpenText(file + "\\blob.txt"))
             {
-                using (StreamReader sr = new StreamReader(fileName))
+                string line;
+                while ((line = sr.ReadLine()) != null)
                 {
-                    while (sr.EndOfStream == false)
-                    {
-                        string line = sr.ReadLine().ToLower();
-                        library.insertLine(line);   
-                        count ++;
-
-                        if (count == 1000 && proc.PrivateMemorySize64 == benchmark)
-                        {
-                            message = "count: " + count + " priateMemory:  " + proc.PrivateMemorySize64 + " benchmark: " + benchmark + " out of " + peak;
-                            break;
-                        }
-                        else if (count == 1000)
-                            count = 0;
-                    }
+                    library.insertLine(line.ToLower());
                 }
-                return message;
             }
-            catch (OutOfMemoryException e)
-            {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                return "count: " + count + " priateMemory:  " + proc.PrivateMemorySize64 + " benchmark: " + benchmark + " out of " + peak;
-            }
-
         }
 
         [WebMethod]
