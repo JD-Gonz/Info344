@@ -51,12 +51,19 @@ namespace ProgrammingAssignment2
             library = new Trie();
             try 
             {
+                PerformanceCounter ramCounter = new System.Diagnostics.PerformanceCounter("Memory", "Available MBytes");
                 using (StreamReader sr = new StreamReader(filepath))
                 {
+                    int count = 0;
                     while (sr.EndOfStream == false)
                     {
                         string line = sr.ReadLine().ToLower();
                         library.insertLine(line);   
+                        count ++;
+                        if (count == 5000 && ramCounter.NextValue() == 100)
+                            break;
+                        else
+                            count = 0;
                     }
                 }
             }
