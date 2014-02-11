@@ -14,6 +14,7 @@ using System.Data.SqlClient;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Threading;
 using System.Diagnostics;
+using System.Web.Hosting;
 
 
 namespace ProgrammingAssignment2
@@ -65,18 +66,18 @@ namespace ProgrammingAssignment2
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            CloudBlobContainer container = blobClient.GetContainerReference("pa2");
+            CloudBlobContainer container = blobClient.GetContainerReference("babyblob");
             if (container.Exists())
             {
                 int count = 0;
-                file = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString();
+                file = HostingEnvironment.ApplicationPhysicalPath + "\\data.txt";
                 foreach (IListBlobItem item in container.ListBlobs(null, false))
                 {
                     count++;
                     if (item.GetType() == typeof(CloudBlockBlob))
                     {
                         CloudBlockBlob blob = (CloudBlockBlob)item;
-                        using (var fs = new FileStream(file + "\\blob.txt", FileMode.OpenOrCreate))
+                        using (var fs = new FileStream(file, FileMode.OpenOrCreate))
                         {
                             blob.DownloadToStream(fs);
                         }
@@ -89,7 +90,7 @@ namespace ProgrammingAssignment2
         public void populateTrie()
         {
             library = new Trie();
-            using (StreamReader sr = File.OpenText(file + "\\blob.txt"))
+            using (StreamReader sr = File.OpenText(file))
             {
                 string line;
                 while ((line = sr.ReadLine()) != null)

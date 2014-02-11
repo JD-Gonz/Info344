@@ -58,8 +58,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\PublishProfiles\jdglab3 %282%29.pubxml" />
-    <None Include="Properties\PublishProfiles\jdglab3 %283%29.pubxml" />
+    <None Include="Properties\PublishProfiles\jdg344.pubxml" />
     <None Include="Properties\PublishProfiles\jdglab3.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

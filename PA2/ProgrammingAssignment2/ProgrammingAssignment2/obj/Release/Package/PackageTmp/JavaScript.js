@@ -20,13 +20,13 @@
                     instance = template.clone();
                     instance.find('.result').html("Sorry, No Suggestions Were Found");
                     instance.removeClass('template');
-                    suggestions.fadeIn(1000).append(instance);
+                    suggestions.fadeIn(500).append(instance);
                 }
                 for (idx = 0; idx < results.length; ++idx) {
                     instance = template.clone();
                     instance.find('.result').html(results[idx]);
                     instance.removeClass('template');
-                    suggestions.fadeIn(250).append(instance);
+                    suggestions.fadeIn(500).append(instance);
                 }
             },
             error: function (data) {
