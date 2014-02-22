@@ -32,7 +32,7 @@ namespace WebRole1
             CloudQueue queue = queueClient.GetQueueReference("websitequeue");
             queue.CreateIfNotExists();
 
-            CloudQueueMessage message = new CloudQueueMessage("http://www." + website + "/");
+            CloudQueueMessage message = new CloudQueueMessage("http://www." + website);
             queue.AddMessage(message);
 
             return "Succesfully added: " + website + " to the queue";

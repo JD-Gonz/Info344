@@ -34,27 +34,41 @@ namespace WorkerRole1
             int count = 0;
             while (true)
             {
-                Thread.Sleep(10000);
+                //Thread.Sleep(10000);
                 Trace.TraceInformation("Working", "Information");
 
                 CloudQueueMessage url = queue.GetMessage(TimeSpan.FromMinutes(5));
-                if (url != null)
+                if (url !=null)
                 {
-                    
                     queue.DeleteMessage(url);
                     string website = url.AsString;
                     if (count < 1)
                     {
                         pages.setRoot(website);
+                        List<string> siteMaps = pages.getRobots(website);
+                        if (!siteMaps.Equals(null))
+                        {
+                            addToQueue(siteMaps);
+                        }
                         count++;
                     }
-                    pages.getRobots(website);
-                    // Create a new customer entity.
-                    WebData link = new WebData("row", pages.getTitle(website));
-                    link.url = website;
-                    link.date = pages.getDate(website);
-                    List<string> newLinks = pages.listOfLinks(website);
-
+                    else
+                    {
+                        if (website.Contains("sitemaps"))
+                        {
+                            List<string> mapLinks = pages.getRobots(website);
+                            addToQueue(mapLinks);
+                        }
+                        else
+                        {
+                            WebData link = new WebData(pages.getRoot(), website);
+                            link.name = pages.getTitle(website);
+                            link.date = pages.getDate(website);
+                            List<string> newLinks = pages.listOfLinks(website);
+                            addToQueue(newLinks);
+                        }
+                    }
+                    
                 }
             }
         }
@@ -68,6 +82,20 @@ namespace WorkerRole1
             // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
 
             return base.OnStart();
+        }
+
+        public void addToQueue(List<string> newLinks)
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
+                CloudConfigurationManager.GetSetting("StorageConnectionString"));
+            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+            CloudQueue queue = queueClient.GetQueueReference("websitequeue");
+            queue.CreateIfNotExists();
+            foreach (string map in newLinks)
+            {
+                CloudQueueMessage message = new CloudQueueMessage(map);
+                queue.AddMessage(message);
+            }
         }
     }
 }

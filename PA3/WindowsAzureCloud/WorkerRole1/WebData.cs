@@ -9,14 +9,14 @@ namespace WorkerRole1
 {
     public class WebData : TableEntity
     {
-        public WebData(string row, string title)
+        public WebData(string domainName, string url)
         {
-            this.PartitionKey = row;
-            this.RowKey = title;
+            this.PartitionKey = domainName;
+            this.RowKey = url;
         }
 
         public WebData() { }
-        public string url { get; set; }
+        public string name { get; set; }
         public string date { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -13,14 +14,19 @@ namespace WorkerRole1
     {
         private string root;
         private string rootName;
-        private Hashtable visited;
+        private HashSet<string> visited;
         private List<string> disallow;
 
         public Pages()
         {
             root = null;
-            visited = new Hashtable();
+            visited = new HashSet<string>();
             disallow = new List<string>();
+        }
+
+        public string getRoot()
+        {
+            return rootName;
         }
 
         public void setRoot (string website)
@@ -31,61 +37,66 @@ namespace WorkerRole1
 
         public List<string> listOfLinks (string website)
         {
-            WebClient web = new WebClient();
-            string html = web.DownloadString(website);
-            string[] separators = new string[] { "<a ", "/a>" };
-            List<string> hyperlinks = html.Split(separators, StringSplitOptions.None).Select(s =>
+            List<string> hyperlinks = new List<string>();
+            HtmlWeb web = new HtmlWeb();
+            try
             {
-                if (s.Contains("href") && s.Contains(rootName))
-                    return s;
-                else
-                    return null;
-            }).ToList();
-            hyperlinks.RemoveAll(item => item == null);
-            return isValid(hyperlinks); 
-        }
-
-        private List<string> isValid (List<string> hyperlinks)
-        {
-            List<string> validLinks = new List<string>();
-            foreach (string link in hyperlinks)
-            {
-                bool add = true;
-                foreach (string test in disallow)
+                HtmlDocument doc = web.Load(website);
+                foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//a"))
                 {
-                    if (link.Contains(test))
-                       add = false;
+                    if (node.Attributes.Contains("href") && node.Attributes["href"].Value.ToString().Contains(rootName + "/"))
+                        hyperlinks.Add(node.Attributes["href"].Value.ToString());
                 }
-                if (add)
-                    validLinks.Add(link);
+                return isValid(hyperlinks);
             }
-            return validLinks;
+            catch
+            {
+                return new List<string>();
+            }
+            
         }
 
-        public void getRobots(string website)
+        public List<string> getRobots(string website)
         {
-
-            visited.Add(website, true);
-            string RobotsTxtFile = root + "/robots.txt";
+            visited.Add(website);
+            string RobotsTxtFile = website + "//robots.txt";
+            List<string> siteMaps = new List<string>();
             WebClient web = new WebClient();
-            using (var stream = web.OpenRead(RobotsTxtFile))
-            using (var reader = new StreamReader(stream))
+            try
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                using (var stream = web.OpenRead(RobotsTxtFile))
+                using (var reader = new StreamReader(stream))
                 {
-                    if (line.StartsWith("Disallow:"))
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        line = line.Substring(9).Trim();
-                        disallow.Add(line);
+                        if (line.StartsWith("Sitemap:"))
+                        {
+                            string[] s = line.Split(' ');
+                            siteMaps.Add(s[1]);
+                        }
+                        else if (line.StartsWith("Disallow:"))
+                        {
+                            line = line.Substring(9).Trim();
+                            disallow.Add(line);
+                        }
                     }
+                    return isValid(siteMaps);
                 }
+            }
+            catch
+            {
+                return new List<string>();
             }
         }
 
         public string getTitle(string website)
         {
             WebClient web = new WebClient();
+
+            //insert try catch for this.
+
+
             string html = web.DownloadString(website);
             string[] separators = html.Split(new string[] { "<title>", "</title>" }, StringSplitOptions.None);
             return separators[1];
@@ -97,6 +108,40 @@ namespace WorkerRole1
             HttpWebResponse res = (HttpWebResponse)req.GetResponse();
             return res.LastModified.ToString();
              
+        }
+
+        private List<string> siteMapUrls(string website)
+        {
+            visited.Add(website);
+            WebClient web = new WebClient();
+            string html = web.DownloadString(website);
+            string[] separators = new string[] { "<loc>", "</loc>" };
+            List<string> siteMaps = html.Split(separators, StringSplitOptions.None).Select(s =>
+            {
+                if (s.Contains("http") && s.Contains(rootName))
+                    return s;
+                else
+                    return null;
+            }).ToList();
+            siteMaps.RemoveAll(item => item == null);
+            return isValid(siteMaps); 
+        }
+
+        private List<string> isValid(List<string> hyperlinks)
+        {
+            List<string> validLinks = new List<string>();
+            foreach (string link in hyperlinks)
+            {
+                bool add = true;
+                foreach (string test in disallow)
+                {
+                    if (link.Contains(test))
+                        add = false;
+                }
+                if (add)
+                    validLinks.Add(link);
+            }
+            return validLinks;
         }
     }
 }
