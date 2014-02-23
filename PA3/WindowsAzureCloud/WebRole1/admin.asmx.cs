@@ -4,9 +4,11 @@ using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Web;
 using System.Web.Services;
 
@@ -32,7 +34,7 @@ namespace WebRole1
             CloudQueue queue = queueClient.GetQueueReference("websitequeue");
             queue.CreateIfNotExists();
 
-            CloudQueueMessage message = new CloudQueueMessage("http://www." + website);
+            CloudQueueMessage message = new CloudQueueMessage("http://" + website);
             queue.AddMessage(message);
 
             return "Succesfully added: " + website + " to the queue";
@@ -49,3 +51,16 @@ namespace WebRole1
         }
     }
 }
+
+/*
+    Process p = *something*;
+    PerformanceCounter ramCounter = new PerformanceCounter("Process", "Working Set", p.ProcessName);
+    PerformanceCounter cpuCounter = new PerformanceCounter("Process", "% Processor Time", p.ProcessName);
+    while (true)
+    {
+        Thread.Sleep(500);
+        double ram = ramCounter.NextValue();
+        double cpu = cpuCounter.NextValue();
+        Console.WriteLine("RAM: " + (ram / 1024 / 1024) + " MB; CPU: " + (cpu) + " %");
+    }
+ */
