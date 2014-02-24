@@ -43,3 +43,8 @@ C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WebRole1\bin\zh-Hant\Sys
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WebRole1\obj\Debug\WebRole1.csprojResolveAssemblyReference.cache
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WebRole1\obj\Debug\WebRole1.dll
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WebRole1\obj\Debug\WebRole1.pdb
+C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WebRole1\bin\WorkerRole1.dll
+C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WebRole1\bin\HtmlAgilityPack.dll
+C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WebRole1\bin\WorkerRole1.pdb
+C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WebRole1\bin\HtmlAgilityPack.pdb
+C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WebRole1\bin\HtmlAgilityPack.xml

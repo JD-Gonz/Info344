@@ -7,9 +7,7 @@ C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\Mi
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\Microsoft.WindowsAzure.Diagnostics.dll
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\Microsoft.WindowsAzure.Storage.dll
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\System.Spatial.dll
-C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\WebRole1.dll
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\Microsoft.WindowsAzure.Diagnostics.StorageUtility.dll
-C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\WebRole1.pdb
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\Microsoft.Data.Edm.xml
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\Microsoft.Data.OData.xml
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\Microsoft.WindowsAzure.Diagnostics.xml

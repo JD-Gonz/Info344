@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace WorkerRole1
 {
-    public class WebData : TableEntity
+    public class ErrorEntity : TableEntity
     {
-        public WebData(string domainName, string name)
+        public ErrorEntity(string domainName, string name)
         {
             this.PartitionKey = domainName;
             this.RowKey = name;
         }
 
-        public WebData() { }
+        public ErrorEntity() { }
+        public string discription { get; set; }
         public string url { get; set; }
-        public DateTime date { get; set; }
     }
 }

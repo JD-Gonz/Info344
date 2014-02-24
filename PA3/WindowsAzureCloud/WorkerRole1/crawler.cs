@@ -16,15 +16,31 @@ namespace WorkerRole1
     {
         private  Uri root;
         private  HashSet<string> host;
-        private  HashSet<Uri> visited;
+        private  Hashtable visited;
         private  List<string> disallow;
 
         public Crawler()
         {
             root = null;
             host = new HashSet<string>();
-            visited = new HashSet<Uri>();
+            visited = new Hashtable();
             disallow = new List<string>();
+        }
+
+        public int getTableSize()
+        {
+           return visited.Count;
+        }
+
+        public string getLastUrls ()
+        {
+            string result = "";
+            int count = Math.Min(visited.Count, 9);
+            for (int i = 0; i <= count; i++)
+            {
+                result += visited[visited.Count - i] + " ";
+            }
+            return result;
         }
 
         public string getTitle(Uri website)
@@ -44,7 +60,7 @@ namespace WorkerRole1
 
         public List<Uri> startCrawling(Uri website)
         {
-            visited.Add(website);
+            visited.Add(visited.Count + 1, website);
             Uri robots;
             if ((!host.Contains(website.Host)) && Uri.TryCreate(website + "//robots.txt", UriKind.Absolute, out robots) && robots.Scheme == Uri.UriSchemeHttp)
             {
@@ -99,7 +115,8 @@ namespace WorkerRole1
             HtmlDocument doc = web.Load(website.ToString());
             foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//a"))
             {
-                if (node.Attributes.Contains("href") && node.Attributes["href"].Value.ToString().Contains(root.Host + "/"))
+                if (node.Attributes.Contains("href") && node.Attributes["href"].Value.ToString().Contains(root.Host + "/") &&
+                    (node.Attributes["href"].Value.ToString().Contains(".html") || node.Attributes["href"].Value.ToString().Contains(".htm")))
                     hyperlinks.Add(node.Attributes["href"].Value);
             }
             return isValid(hyperlinks);

@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAzure.Storage;
+﻿using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
@@ -11,6 +12,7 @@ using System.Net;
 using System.Threading;
 using System.Web;
 using System.Web.Services;
+using WorkerRole1;
 
 namespace WebRole1
 {
@@ -24,43 +26,89 @@ namespace WebRole1
     // [System.Web.Script.Services.ScriptService]
     public class admin : System.Web.Services.WebService
     {
-
         [WebMethod]
         public string StartCrawling(string website)
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                ConfigurationManager.AppSettings["StorageConnectionString"]);
-            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-            CloudQueue queue = queueClient.GetQueueReference("websitequeue");
-            queue.CreateIfNotExists();
-
-            CloudQueueMessage message = new CloudQueueMessage("http://" + website);
-            queue.AddMessage(message);
-
+            CloudQueue commandQueue = CreateQueue("commandqueue");
+            CloudQueueMessage message = new CloudQueueMessage("Start http://" + website);
+            commandQueue.AddMessage(message);
             return "Succesfully added: " + website + " to the queue";
         }
 
         [WebMethod]
-        public void GetPageTitles()
+        public void GetPageTitle()
+        {
+            CloudTable urlTable = CreateTable("websitetable");
+            TableQuery<Urls> query = new TableQuery<Urls>()
+                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "answer"));
+
+        }
+
+        [WebMethod]
+        public string MachineCounters()
+        {
+            PerformanceCounter ramCounter = new PerformanceCounter("Process", "Working Set");
+            PerformanceCounter cpuCounter = new PerformanceCounter("Process", "% Processor Time");
+            while (true)
+            {
+                Thread.Sleep(500);
+                double ram = ramCounter.NextValue();
+                double cpu = cpuCounter.NextValue();
+                return("RAM: " + (ram / 1024 / 1024) + " MB; CPU: " + (cpu) + " %");
+            }
+        }
+
+        [WebMethod]
+        public void numberOfURLsCrawled()
+        {
+        }
+
+        [WebMethod]
+        public void LastTenURLsCrawled()
+        {
+        }
+
+        [WebMethod]
+        public void SizeOfQueue()
+        {
+        }
+
+        public void SizeOfIndex()
+        {
+        }
+
+        public void Errors()
+        {
+        }
+
+        public void ClearData()
+        {
+        }
+
+        public void CrawlerStatus()
+        {
+        }
+
+        private CloudQueue CreateQueue(string refrence)
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                ConfigurationManager.AppSettings["StorageConnectionString"]);
-            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-            CloudTable table = tableClient.GetTableReference("websitetable");
+                CloudConfigurationManager.GetSetting("StorageConnectionString"));
+            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+            CloudQueue queue = queueClient.GetQueueReference(refrence);
+            queue.CreateIfNotExists();
+            return queue;
+        }
 
+        private CloudTable CreateTable(string refrence)
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
+                CloudConfigurationManager.GetSetting("StorageConnectionString"));
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+            CloudTable table = tableClient.GetTableReference(refrence);
+            table.CreateIfNotExists();
+            return table;
         }
     }
 }
 
-/*
-    Process p = *something*;
-    PerformanceCounter ramCounter = new PerformanceCounter("Process", "Working Set", p.ProcessName);
-    PerformanceCounter cpuCounter = new PerformanceCounter("Process", "% Processor Time", p.ProcessName);
-    while (true)
-    {
-        Thread.Sleep(500);
-        double ram = ramCounter.NextValue();
-        double cpu = cpuCounter.NextValue();
-        Console.WriteLine("RAM: " + (ram / 1024 / 1024) + " MB; CPU: " + (cpu) + " %");
-    }
- */
+
