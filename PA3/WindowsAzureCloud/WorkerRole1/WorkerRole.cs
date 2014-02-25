@@ -29,19 +29,19 @@ namespace WorkerRole1
             CloudQueue commandQueue = CreateQueue("commandqueue");
             CloudTable webTable = CreateTable("websitetable");
             CloudTable resultsTable = CreateTable("resulttable");
-
+            
             while (true)
             {
                 Thread.Sleep(500);
                 Trace.TraceInformation("Working", "Information");
-
                 CloudQueueMessage command = commandQueue.GetMessage();
-                if (command == null && state.Equals("Crawling"))
+                if (command == null)
                 {
-                    state = "Crawling";
+                    state = "Idle";
                     CloudQueueMessage url = webQueue.GetMessage();
                     if (url != null) 
                     {
+                        state = "Crawling";
                         webQueue.DeleteMessage(url);
                         Uri website = new UriBuilder(url.AsString).Uri;
                         if (website.ToString().Contains("sitemaps"))
@@ -57,14 +57,11 @@ namespace WorkerRole1
                             webTable.Execute(insert);
                             sitesCrawled++;
                         }
-                        ResultEntity result = new ResultEntity("results", state, crawler.getLastUrls(), crawler.getTableSize(), sitesCrawled);
-                        TableOperation update = TableOperation.InsertOrReplace(result);
-                        resultsTable.Execute(update);
                     }
                 }
                 else if (command != null)
                 {
-
+                    state = "Idle";
                     commandQueue.DeleteMessage(command);
                     string process = command.AsString;
                     if (process.StartsWith("Start"))
@@ -80,10 +77,10 @@ namespace WorkerRole1
                 else if (state.Equals("Stopping"))
                 {
                     state = "Stopped";
-                    ResultEntity result = new ResultEntity("results", state, crawler.getLastUrls(), crawler.getTableSize(), sitesCrawled);
-                    TableOperation update = TableOperation.InsertOrReplace(result);
-                    resultsTable.Execute(update);
                 }
+                ResultEntity result = new ResultEntity(state, crawler.getLastUrls(), crawler.getTableSize(), sitesCrawled);
+                TableOperation update = TableOperation.InsertOrReplace(result);
+                resultsTable.Execute(update);
             }
         }
 
@@ -94,7 +91,7 @@ namespace WorkerRole1
 
             // For information on handling configuration changes
             // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
-            state = "Loading/Idle";
+            state = "Loading";
             crawler = new Crawler();
             return base.OnStart();
         }
@@ -104,8 +101,7 @@ namespace WorkerRole1
             Uri link = new UriBuilder(website).Uri;
             CloudQueue queue = CreateQueue("websitequeue");
             CloudTable resultsTable = CreateTable("resulttable");
-            state = "Crawling";
-            ResultEntity result = new ResultEntity("results", state, crawler.getLastUrls(), crawler.getTableSize(), sitesCrawled);
+            ResultEntity result = new ResultEntity(state, crawler.getLastUrls(), crawler.getTableSize(), sitesCrawled);
             TableOperation update = TableOperation.InsertOrReplace(result);
             resultsTable.Execute(update);
             CloudQueueMessage message = new CloudQueueMessage(link.ToString());
@@ -114,16 +110,14 @@ namespace WorkerRole1
     
         private void stopCrawling()
         {
-            CloudTable resultsTable = CreateTable("resulttable");
-            CloudQueue queue = CreateQueue("websitequeue");
+            clearAll();
             state = "Stopping";
-            ResultEntity result = new ResultEntity("results", state, crawler.getLastUrls(), crawler.getTableSize(), sitesCrawled);
-            TableOperation update = TableOperation.InsertOrReplace(result);
-            resultsTable.Execute(update);
         }
 
         private void clearAll()
-        { 
+        {
+            if(state != "Stopping")
+                stopCrawling();
             CloudQueue webQueue = CreateQueue("websitequeue");
             CloudTable webTable = CreateTable("websitetable");
             CloudTable resultsTable = CreateTable("resulttable");

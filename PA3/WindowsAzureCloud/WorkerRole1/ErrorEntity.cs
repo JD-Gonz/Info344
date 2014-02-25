@@ -9,9 +9,9 @@ namespace WorkerRole1
 {
     public class ErrorEntity : TableEntity
     {
-        public ErrorEntity(string domainName, string name, string description, string url)
+        public ErrorEntity(string name, string description, string url)
         {
-            this.PartitionKey = domainName;
+            this.PartitionKey = "Error";
             this.RowKey = name;
             this.description = description;
             this.url = url;

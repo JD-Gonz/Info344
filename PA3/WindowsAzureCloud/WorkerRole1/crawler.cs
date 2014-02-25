@@ -70,36 +70,30 @@ namespace WorkerRole1
                 List<string> siteMaps = new List<string>();
                 string userAgent = "*";
                 WebClient web = new WebClient();
-                try
+
+                using (var stream = web.OpenRead(robots))
+                using (var reader = new StreamReader(stream))
                 {
-                    using (var stream = web.OpenRead(robots))
-                    using (var reader = new StreamReader(stream))
+                    string lines;
+                    while ((lines = reader.ReadLine()) != null && userAgent == "*")
                     {
-                        string lines;
-                        while ((lines = reader.ReadLine()) != null && userAgent == "*")
+                        if (lines.StartsWith("Sitemap:"))
                         {
-                            if (lines.StartsWith("Sitemap:"))
-                            {
-                                string[] line = lines.Split(' ');
-                                siteMaps.Add(line[1]);
-                            }
-                            else if (lines.StartsWith("User-agent:"))
-                            {
-                                string[] line = lines.Split(' ');
-                                userAgent = line[1].Trim();
-                            }
-                            else if (lines.StartsWith("Disallow:"))
-                            {
-                                string[] line = lines.Split(' ');
-                                disallow.Add(line[1]);
-                            }
+                            string[] line = lines.Split(' ');
+                            siteMaps.Add(line[1]);
                         }
-                        return isValid(siteMaps);
+                        else if (lines.StartsWith("User-agent:"))
+                        {
+                            string[] line = lines.Split(' ');
+                            userAgent = line[1].Trim();
+                        }
+                        else if (lines.StartsWith("Disallow:"))
+                        {
+                            string[] line = lines.Split(' ');
+                            disallow.Add(line[1]);
+                        }
                     }
-                }
-                catch (WebException ex)
-                {
-                    return new List<Uri>(); //no robots existed for this website.
+                    return isValid(siteMaps);
                 }
             }
             if (website.ToString().Contains("sitemaps"))

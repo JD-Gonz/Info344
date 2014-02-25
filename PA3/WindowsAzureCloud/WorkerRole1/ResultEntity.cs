@@ -9,17 +9,18 @@ namespace WorkerRole1
 {
     public class ResultEntity : TableEntity
     {
-        public ResultEntity(string domainName, string name, string lastTenCrawled, int numOfUrlsCrawled, int tableSize)
+        public ResultEntity(string state, string lastTenCrawled, int numOfUrlsCrawled, int tableSize)
         {
-            this.PartitionKey = domainName;
-            this.RowKey = name;
+            this.PartitionKey = "results";
+            this.RowKey = "update";
+            this.state = state;
             this.lastTenCrawled = lastTenCrawled;
             this.numOfUrlsCrawled = numOfUrlsCrawled;
             this.tableSize = tableSize;
-
         }
 
         public ResultEntity() { }
+        public string state { get; set; }
         public string lastTenCrawled { get; set; }
         public int numOfUrlsCrawled { get; set; }
         public int tableSize { get; set; }
