@@ -4,33 +4,10 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
-    <style type="text/css">
-            body {  font: 11pt Trebuchet MS;
-                    font-color: #000000;
-                    padding-top: 72px;
-                    text-align: center }
+<link rel="stylesheet" href="Styles.css"/>
 
-            .text { font: 8pt Trebuchet MS }
-        </style>
     <title>Simple Web Service</title>
 
-    <script type="text/javascript">
-
-        // This function calls the Web Service method.  
-        function EchoUserInput() {
-            var echoElem = document.getElementById("EnteredValue");
-            Samples.AspNet.SimpleWebService.EchoInput(echoElem.value,
-                SucceededCallback);
-        }
-
-        // This is the callback function that 
-        // processes the Web Service return value.
-        function SucceededCallback(result) {
-            var RsltElem = document.getElementById("Results");
-            RsltElem.innerHTML = result;
-        }
-
-        </script>
 </head>
 
 <body>
@@ -42,11 +19,32 @@
             </asp:ScriptManager>
             <div>
                 <h2>Simple Web Service</h2>
-                    <p>Calling a simple service that echoes the user's input and 
-                        returns the current server time.</p>
                     <input id="EnteredValue" type="text" />
-                    <input id="EchoButton" type="button"  
-                        value="Echo" onclick="EchoUserInput()" />
+                    <input id="EchoButton" type="button" value="Echo" onclick="EchoUserInput()" />
+
+                <h2>Simple Web Service</h2>
+                    <input id="EnteredValue" type="text" />
+                    <input id="EchoButton" type="button" value="Echo" onclick="EchoUserInput()" />
+
+                <h2>Simple Web Service</h2>
+                    <input id="EnteredValue" type="text" />
+                    <input id="EchoButton" type="button" value="Echo" onclick="EchoUserInput()" />
+
+                <h2>Simple Web Service</h2>
+                    <input id="EnteredValue" type="text" />
+                    <input id="EchoButton" type="button" value="Echo" onclick="EchoUserInput()" />
+
+                <h2>Simple Web Service</h2>
+                    <input id="EnteredValue" type="text" />
+                    <input id="EchoButton" type="button" value="Echo" onclick="EchoUserInput()" />
+
+                <h2>Simple Web Service</h2>
+                    <input id="EnteredValue" type="text" />
+                    <input id="EchoButton" type="button" value="Echo" onclick="EchoUserInput()" />
+
+                <h2>Simple Web Service</h2>
+                    <input id="EnteredValue" type="text" />
+                    <input id="EchoButton" type="button" value="Echo" onclick="EchoUserInput()" />
             </div>
         </form>
 
@@ -55,6 +53,6 @@
         <div>
             <span id="Results"></span>
         </div>   
-
+        <script src="JavaScript.js"></script>
     </body>
 </html>

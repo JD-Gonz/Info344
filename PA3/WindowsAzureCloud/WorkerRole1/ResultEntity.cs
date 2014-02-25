@@ -7,18 +7,21 @@ using System.Threading.Tasks;
 
 namespace WorkerRole1
 {
-    public class Results : TableEntity
+    public class ResultEntity : TableEntity
     {
-        public Results(string domainName, string name)
+        public ResultEntity(string domainName, string name, string lastTenCrawled, int numOfUrlsCrawled, int tableSize)
         {
             this.PartitionKey = domainName;
             this.RowKey = name;
+            this.lastTenCrawled = lastTenCrawled;
+            this.numOfUrlsCrawled = numOfUrlsCrawled;
+            this.tableSize = tableSize;
+
         }
 
-        public Results() { }
+        public ResultEntity() { }
         public string lastTenCrawled { get; set; }
         public int numOfUrlsCrawled { get; set; }
-        public string queueSize { get; set; }
         public int tableSize { get; set; }
     }
 }

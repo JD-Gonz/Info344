@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace WorkerRole1
 {
-    public class Urls : TableEntity
+    public class UriEntity : TableEntity
     {
-        public Urls(string domainName, string url)
+        public UriEntity(string domainName, string url, string name, DateTime date)
         {
             this.PartitionKey = domainName;
             this.RowKey = url;
+            this.name = name;
+            this.date = date;
         }
-
-        public Urls() { }
-        public string localPath { get; set; }
+        public UriEntity() { }
         public string name { get; set; }
         public DateTime date { get; set; }
     }

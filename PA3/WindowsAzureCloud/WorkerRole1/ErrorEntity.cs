@@ -9,14 +9,16 @@ namespace WorkerRole1
 {
     public class ErrorEntity : TableEntity
     {
-        public ErrorEntity(string domainName, string name)
+        public ErrorEntity(string domainName, string name, string description, string url)
         {
             this.PartitionKey = domainName;
             this.RowKey = name;
+            this.description = description;
+            this.url = url;
         }
 
         public ErrorEntity() { }
-        public string discription { get; set; }
+        public string description { get; set; }
         public string url { get; set; }
     }
 }

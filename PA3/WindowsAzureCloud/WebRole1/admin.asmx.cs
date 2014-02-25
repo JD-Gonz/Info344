@@ -36,12 +36,23 @@ namespace WebRole1
         }
 
         [WebMethod]
-        public void GetPageTitle()
+        public string GetPageTitle(string site)
         {
+            Uri uri = new UriBuilder(site).Uri;
             CloudTable urlTable = CreateTable("websitetable");
-            TableQuery<Urls> query = new TableQuery<Urls>()
-                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "answer"));
-
+            TableQuery<UriEntity> query = new TableQuery<UriEntity>()
+                .Where(TableQuery.CombineFilters(
+                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, uri.Host),
+                TableOperators.And,
+                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, uri.AbsoluteUri))
+                );
+            string result = "";
+            foreach (UriEntity entity in urlTable.ExecuteQuery(query))
+            {
+                result = entity.name;
+                break;
+            }
+            return result;
         }
 
         [WebMethod]
@@ -71,6 +82,8 @@ namespace WebRole1
         [WebMethod]
         public void SizeOfQueue()
         {
+            CloudQueue queue = CreateQueue("websitequeue");
+            queue.ApproximateMessageCount.ToString();
         }
 
         public void SizeOfIndex()

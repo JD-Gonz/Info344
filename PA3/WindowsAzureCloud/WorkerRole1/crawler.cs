@@ -61,8 +61,8 @@ namespace WorkerRole1
         public List<Uri> startCrawling(Uri website)
         {
             visited.Add(visited.Count + 1, website);
-            Uri robots;
-            if ((!host.Contains(website.Host)) && Uri.TryCreate(website + "//robots.txt", UriKind.Absolute, out robots) && robots.Scheme == Uri.UriSchemeHttp)
+            Uri robots = new UriBuilder(website + "//robots.txt").Uri;
+            if ((!host.Contains(website.Host)))
             {
                 if (host.Count == 0)
                     root = website;
@@ -88,7 +88,7 @@ namespace WorkerRole1
                                 string[] line = lines.Split(' ');
                                 userAgent = line[1].Trim();
                             }
-                            else
+                            else if (lines.StartsWith("Disallow:"))
                             {
                                 string[] line = lines.Split(' ');
                                 disallow.Add(line[1]);
@@ -146,9 +146,11 @@ namespace WorkerRole1
                     if (link.Contains(test))
                         add = false;
                 }
-                Uri validLink;
-                if (add && Uri.TryCreate(link, UriKind.Absolute, out validLink) && validLink.Scheme == Uri.UriSchemeHttp)
+                if (add)
+                {
+                    Uri validLink = new UriBuilder(link).Uri;
                     validLinks.Add(validLink);
+                }
             }
             return validLinks;
         }
