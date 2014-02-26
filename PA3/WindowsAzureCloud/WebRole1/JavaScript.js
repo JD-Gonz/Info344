@@ -81,7 +81,7 @@ function lastTenUrls() {
 
 function lastTenCallback(result) {
     var RsltElem = document.getElementById("lastTenMessage");
-    var res = result.replace(" ", " <Br> ")
+    var res = result.replace(" ", " <Br/> ")
     RsltElem.innerHTML = res;
 }
                    
