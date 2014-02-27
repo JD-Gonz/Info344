@@ -13,11 +13,11 @@ namespace WorkerRole1
         {
             this.PartitionKey = domainName;
             this.RowKey = url;
-            this.name = name;
-            this.date = date;
+            this.Name = name;
+            this.Date = date;
         }
         public UriEntity() { }
-        public string name { get; set; }
-        public DateTime date { get; set; }
+        public string Name { get; set; }
+        public DateTime Date { get; set; }
     }
 }

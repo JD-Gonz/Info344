@@ -11,18 +11,18 @@ namespace WorkerRole1
     {
         public ResultEntity(string state, string lastTenCrawled, int numOfUrlsCrawled, int tableSize)
         {
-            this.PartitionKey = "results";
-            this.RowKey = "update";
-            this.state = state;
-            this.lastTenCrawled = lastTenCrawled;
-            this.numOfUrlsCrawled = numOfUrlsCrawled;
-            this.tableSize = tableSize;
+            this.PartitionKey = "Result";
+            this.RowKey = "Result";
+            this.State = state;
+            this.LastTen = lastTenCrawled;
+            this.NumOfUrls = numOfUrlsCrawled;
+            this.TableSize = tableSize;
         }
 
         public ResultEntity() { }
-        public string state { get; set; }
-        public string lastTenCrawled { get; set; }
-        public int numOfUrlsCrawled { get; set; }
-        public int tableSize { get; set; }
+        public string State { get; set; }
+        public string LastTen { get; set; }
+        public int NumOfUrls { get; set; }
+        public int TableSize { get; set; }
     }
 }

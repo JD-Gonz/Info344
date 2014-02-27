@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>RobotsTxt</id>
+    <version>2014.02.19</version>
+    <title>RobotsTxt : A robots.txt parser for .NET</title>
+    <authors>Çağdaş Tekin</authors>
+    <owners>Çağdaş Tekin</owners>
+    <licenseUrl>http://opensource.org/licenses/mit-license.php</licenseUrl>
+    <projectUrl>https://code.google.com/p/robotstxt/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A robots.txt parser for .NET
+
+Supports ;
+- Allow directives.
+- Crawl-delay directives.
+- Sitemap declarations.
+- * and $ wildcards.</description>
+    <summary>A robots.txt parser for .NET</summary>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>Robots.Txt Parser Parsing Library</tags>
+  </metadata>
+</package>

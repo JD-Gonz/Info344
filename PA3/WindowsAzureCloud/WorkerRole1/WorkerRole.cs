@@ -19,16 +19,18 @@ namespace WorkerRole1
         private Crawler crawler;
         private string state;
         private int sitesCrawled;
+        private CloudQueue webQueue;
+        private CloudQueue commandQueue;
+        private CloudTable webTable;
+        private CloudTable resultsTable;
+        private CloudTable errorTable;
 
         public override void Run()
         {
             // This is a sample worker implementation. Replace with your logic.
             Trace.TraceInformation("WorkerRole1 entry point called", "Information");
 
-            CloudQueue webQueue = CreateQueue("websitequeue");
-            CloudQueue commandQueue = CreateQueue("commandqueue");
-            CloudTable webTable = CreateTable("websitetable");
-            CloudTable resultsTable = CreateTable("resulttable");
+
             
             while (true)
             {
@@ -37,13 +39,12 @@ namespace WorkerRole1
                 CloudQueueMessage command = commandQueue.GetMessage();
                 if (command == null)
                 {
-                    state = "Idle";
                     CloudQueueMessage url = webQueue.GetMessage();
                     if (url != null) 
                     {
                         state = "Crawling";
                         webQueue.DeleteMessage(url);
-                        Uri website = new UriBuilder(url.AsString).Uri;
+                        Uri website = new UriBuilder(url.AsString.Replace("www.", "")).Uri;
                         if (website.ToString().Contains("sitemaps"))
                         {
                             addToQueue(crawler.startCrawling(website));
@@ -52,12 +53,30 @@ namespace WorkerRole1
                         {
                             UriEntity link = new UriEntity(website.Host, HttpUtility.UrlEncode(website.AbsoluteUri),
                                                            crawler.getTitle(website), crawler.getDate(website));
+                            if (link.Name != null && link.Date != null)
+                            {
+
+                                TableOperation insert = TableOperation.InsertOrReplace(link);
+                                webTable.Execute(insert);
+                                sitesCrawled++;
+                            }
+                            else
+                            {
+                                ErrorEntity result = new ErrorEntity("ERROR 408: Attribute Request Timed-Out when accessing " + link);
+                                TableOperation update = TableOperation.InsertOrReplace(result);
+                                errorTable.Execute(update);
+                            }
                             addToQueue(crawler.startCrawling(website));
-                            TableOperation insert = TableOperation.InsertOrReplace(link);
-                            webTable.Execute(insert);
-                            sitesCrawled++;
                         }
+
                     }
+                    if (state != "Stopped/Data Cleared")
+                    {
+                        ResultEntity result = new ResultEntity(state, crawler.getLastUrls(), crawler.getTableSize(), sitesCrawled);
+                        TableOperation update = TableOperation.InsertOrReplace(result);
+                        resultsTable.Execute(update);
+                    }
+                    
                 }
                 else if (command != null)
                 {
@@ -71,16 +90,11 @@ namespace WorkerRole1
                     }
                     else if (process.StartsWith("Stop"))
                         stopCrawling();
-                    else if (process.StartsWith("Clear"))
-                        clearAll();
                 }
                 else if (state.Equals("Stopping"))
                 {
                     state = "Stopped";
                 }
-                ResultEntity result = new ResultEntity(state, crawler.getLastUrls(), crawler.getTableSize(), sitesCrawled);
-                TableOperation update = TableOperation.InsertOrReplace(result);
-                resultsTable.Execute(update);
             }
         }
 
@@ -91,42 +105,33 @@ namespace WorkerRole1
 
             // For information on handling configuration changes
             // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
-            state = "Loading";
+            state = "idle";
             crawler = new Crawler();
+            webQueue = CreateQueue("websitequeue");
+            commandQueue = CreateQueue("commandqueue");
+            webTable = CreateTable("websitetable");
+            resultsTable = CreateTable("resulttable");
+            errorTable = CreateTable("errortable");
             return base.OnStart();
         }
 
         private void startCrawling(string website)
         {
             Uri link = new UriBuilder(website).Uri;
-            CloudQueue queue = CreateQueue("websitequeue");
-            CloudTable resultsTable = CreateTable("resulttable");
             ResultEntity result = new ResultEntity(state, crawler.getLastUrls(), crawler.getTableSize(), sitesCrawled);
             TableOperation update = TableOperation.InsertOrReplace(result);
             resultsTable.Execute(update);
             CloudQueueMessage message = new CloudQueueMessage(link.ToString());
-            queue.AddMessage(message);   
+            webQueue.AddMessage(message);   
         }
     
         private void stopCrawling()
         {
-            clearAll();
-            state = "Stopping";
-        }
-
-        private void clearAll()
-        {
-            if(state != "Stopping")
-                stopCrawling();
-            CloudQueue webQueue = CreateQueue("websitequeue");
-            CloudTable webTable = CreateTable("websitetable");
-            CloudTable resultsTable = CreateTable("resulttable");
-            CloudTable errorTable = CreateTable("errortable");
             webQueue.Clear();
             webTable.DeleteIfExists();
             resultsTable.DeleteIfExists();
             errorTable.DeleteIfExists();
-            state = "Data Cleared";
+            state = "Stopped/Data Cleared";
 
         }
 
@@ -150,14 +155,22 @@ namespace WorkerRole1
             return table;
         }
 
-        private void addToQueue(List<Uri> newLinks)
+        private void addToQueue(List<string> newLinks)
         {
-            CloudQueue queue = CreateQueue("websitequeue");
-
-            foreach (Uri link in newLinks)
+            foreach (string website in newLinks)
             {
-                CloudQueueMessage message = new CloudQueueMessage(link.ToString());
-                queue.AddMessage(message);
+                if (website.StartsWith("ERROR"))
+                {
+                    ErrorEntity result = new ErrorEntity(website);
+                    TableOperation update = TableOperation.InsertOrReplace(result);
+                    errorTable.Execute(update);
+                }
+                else
+                {
+                    Uri link = new UriBuilder(website).Uri;
+                    CloudQueueMessage message = new CloudQueueMessage(link.ToString());
+                    webQueue.AddMessage(message);
+                }
             }
         }
     }

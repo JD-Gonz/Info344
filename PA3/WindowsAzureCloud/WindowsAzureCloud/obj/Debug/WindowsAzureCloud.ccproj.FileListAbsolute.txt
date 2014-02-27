@@ -86,3 +86,5 @@ C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WindowsAzureCloud\obj\De
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WindowsAzureCloud\obj\Debug\WebRole1\bin\HtmlAgilityPack.xml
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WindowsAzureCloud\obj\Debug\WebRole1\bin\WorkerRole1.dll
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WindowsAzureCloud\obj\Debug\WebRole1\bin\WorkerRole1.pdb
+C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WindowsAzureCloud\obj\Debug\WorkerRole1\RobotsTxt.dll
+C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WindowsAzureCloud\obj\Debug\WebRole1\bin\RobotsTxt.dll

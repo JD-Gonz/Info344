@@ -37,10 +37,16 @@ namespace WebRole1
         [WebMethod]
         public string StartCrawling(string website)
         {
-            CloudQueue commandQueue = CreateQueue("commandqueue");
-            CloudQueueMessage message = new CloudQueueMessage("Start http://" + website);
-            commandQueue.AddMessage(message);
-            return "Succesfully added: " + website + " to the queue";
+            if (!string.IsNullOrEmpty(website))
+            {
+                CloudQueue commandQueue = CreateQueue("commandqueue");
+                CloudQueueMessage message = new CloudQueueMessage("Start http://" + website);
+                commandQueue.AddMessage(message);
+                return "Succesfully added: " + website + " to the queue";
+            }
+            else
+                return "Please enter a valid website";
+            
         }
 
         [WebMethod]
@@ -50,71 +56,63 @@ namespace WebRole1
             CloudQueue commandQueue = CreateQueue("commandqueue");
             CloudQueueMessage message = new CloudQueueMessage("Stop");
             commandQueue.AddMessage(message);
-            return "Stopping Crawler";
-        }
-
-        [WebMethod]
-        public string ClearData()
-        {
-            state = "Stopped";
-            CloudQueue commandQueue = CreateQueue("commandqueue");
-            CloudQueueMessage message = new CloudQueueMessage("Clear");
-            commandQueue.AddMessage(message);
-            return "Clearing Data";
+            return "Stopping/Clearing Crawler, This may take a few minutes";
         }
 
         [WebMethod]
         public string GetPageTitle(string site)
         {
-            try
+            if (string.IsNullOrEmpty(state))
             {
-                Uri uri = new UriBuilder(site).Uri;
-            }
-            catch
-            {
-                // the given string could not be converted to a proper URL!!!
-            }
-            if (state == null)
-            {
-                CloudTable urlTable = CreateTable("websitetable");
-                TableQuery<UriEntity> query = new TableQuery<UriEntity>()
-                    .Where(TableQuery.CombineFilters(
-                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, uri.Host),
-                    TableOperators.And,
-                    TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, HttpUtility.UrlEncode(uri.AbsoluteUri)))
-                    );
-                string result = "";
-                foreach (UriEntity entity in urlTable.ExecuteQuery(query))
+                try
                 {
-                    result = entity.name + " " + entity.date;
-                    break;
+                    Uri uri = new UriBuilder(site.Replace("www.", "")).Uri;
+                    CloudTable urlTable = CreateTable("websitetable");
+                    TableQuery<UriEntity> query = new TableQuery<UriEntity>()
+                        .Where(TableQuery.CombineFilters(
+                        TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, uri.Host),
+                        TableOperators.And,
+                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, HttpUtility.UrlEncode(uri.AbsoluteUri)))
+                        );
+                    string result = "";
+                    foreach (UriEntity entity in urlTable.ExecuteQuery(query))
+                    {
+                        result = entity.Name + " " + entity.Date;
+                        break;
+                    }
+                    return result;
                 }
-                return result;
+                catch
+                {
+                    return "Provided URL could not be used";
+                }
             }
             else
-            {
-                return "Data Cleared or Crawler was Stopped";
-            }
+                return "Can not retrieve data at this time";
             
         }
 
         [WebMethod]
         public string Errors()
         {
-            if (state == null)
+            if (string.IsNullOrEmpty(state))
             {
                 CloudTable urlTable = CreateTable("errortable");
                 TableQuery<ErrorEntity> query = new TableQuery<ErrorEntity>()
-                    .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "Error"));
+                .Where(TableQuery.CombineFilters(
+                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "Error"),
+                TableOperators.And,
+                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, "Error"))
+                );
                 string result = "";
                 foreach (ErrorEntity entity in urlTable.ExecuteQuery(query))
                 {
-                    result += "Error: " + entity.url + " encountered " + entity.description + "||"; 
+                    result += entity.Description + " <Br/> "; 
                 }
                 return result;
             }
             else
-                return "Data Cleared or Crawler was Stopped"; 
+                return "Can not retrieve data at this time"; 
         }
 
 
@@ -135,27 +133,38 @@ namespace WebRole1
         }
 
         [WebMethod]
-        public int numberOfURLsCrawled()
+        public string numberOfURLsCrawled()
         {
-            IEnumerable<ResultEntity> urlTable = query();
-            int result = 0;
-            foreach (ResultEntity entity in urlTable)
+            if (string.IsNullOrEmpty(state))
             {
-                result = entity.numOfUrlsCrawled;
+                IEnumerable<ResultEntity> urlTable = query();
+                string result = "0";
+                foreach (ResultEntity entity in urlTable)
+                {
+                    result = "" + entity.NumOfUrls;
+                }
+                return result;
             }
-            return result;
+            else
+                return "Can not retrieve data at this time";
+
         }
 
         [WebMethod]
         public string LastTenURLsCrawled()
         {
-            IEnumerable<ResultEntity> urlTable = query();
-             string lastTen = "";
-            foreach (ResultEntity entity in urlTable)
+            if (string.IsNullOrEmpty(state))
             {
-                lastTen = entity.lastTenCrawled;
+                IEnumerable<ResultEntity> urlTable = query();
+                 string lastTen = "";
+                foreach (ResultEntity entity in urlTable)
+                {
+                    lastTen = entity.LastTen;
+                }
+                return lastTen.Replace(" ", " <Br/> ");
             }
-            return lastTen;
+            else
+                return "Can not retrieve data at this time";
         }
 
         [WebMethod]
@@ -167,44 +176,49 @@ namespace WebRole1
         }
 
         [WebMethod]
-        public int SizeOfTable()
+        public string SizeOfTable()
         {
-            IEnumerable<ResultEntity> urlTable = query();
-            int result = 0;
-            foreach (ResultEntity entity in urlTable)
+            if (string.IsNullOrEmpty(state))
             {
-                result = entity.tableSize;
+                IEnumerable<ResultEntity> urlTable = query();
+                string result = "0";
+                foreach (ResultEntity entity in urlTable)
+                {
+                    result = "" + entity.TableSize;
+                }
+                return result;
             }
-            return result;
+             else
+                 return "Can not retrieve data at this time";
         }
 
         [WebMethod]
         public string CrawlerStatus()
         {
-            IEnumerable<ResultEntity> urlTable = query();
-            string result = "";
-            foreach (ResultEntity entity in urlTable)
+            if (string.IsNullOrEmpty(state))
             {
-                result = entity.state;
+                IEnumerable<ResultEntity> urlTable = query();
+                string result = "";
+                foreach (ResultEntity entity in urlTable)
+                {
+                    result = entity.State;
+                }
+                return result;
             }
-            return result;
+            else
+                return "Stopping/Clearing Crawler, This may take a few minutes";
         }
 
         private IEnumerable<ResultEntity> query()
         {
-            if (state == null)
-            {
-                CloudTable urlTable = CreateTable("resulttable");
-                TableQuery<ResultEntity> query = new TableQuery<ResultEntity>()
-                    .Where(TableQuery.CombineFilters(
-                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "results"),
-                    TableOperators.And,
-                    TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, "update"))
-                    );
-                return urlTable.ExecuteQuery(query);
-            }
-            else
-                return null;
+            CloudTable urlTable = CreateTable("resulttable");
+            TableQuery<ResultEntity> query = new TableQuery<ResultEntity>()
+                .Where(TableQuery.CombineFilters(
+                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "Result"),
+                TableOperators.And,
+                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, "Result"))
+                );
+            return urlTable.ExecuteQuery(query);
         }
 
         private CloudQueue CreateQueue(string refrence)

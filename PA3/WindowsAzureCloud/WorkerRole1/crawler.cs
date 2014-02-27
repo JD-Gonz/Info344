@@ -45,9 +45,16 @@ namespace WorkerRole1
 
         public string getTitle(Uri website)
         {
-            WebClient web = new WebClient();
-            string source = web.DownloadString(website.ToString());
-            return Regex.Match(source, @"\<title\b[^>]*\>\s*(?<Title>[\s\S]*?)\</title\>", RegexOptions.IgnoreCase).Groups["Title"].Value;
+            try
+            {
+                WebClient web = new WebClient();
+                string source = web.DownloadString(website.ToString());
+                return Regex.Match(source, @"\<title\b[^>]*\>\s*(?<Title>[\s\S]*?)\</title\>", RegexOptions.IgnoreCase).Groups["Title"].Value;
+            }
+            catch
+            {
+                return null;
+            }  
         }
 
         public DateTime getDate(Uri website)
@@ -58,80 +65,95 @@ namespace WorkerRole1
 
         }
 
-        public List<Uri> startCrawling(Uri website)
+        public List<string> startCrawling(Uri website)
         {
             visited.Add(visited.Count + 1, website);
             Uri robots = new UriBuilder(website + "//robots.txt").Uri;
-            if ((!host.Contains(website.Host)))
-            {
-                if (host.Count == 0)
-                    root = website;
-                host.Add(robots.Host);
-                List<string> siteMaps = new List<string>();
-                string userAgent = "*";
-                WebClient web = new WebClient();
-
-                using (var stream = web.OpenRead(robots))
-                using (var reader = new StreamReader(stream))
-                {
-                    string lines;
-                    while ((lines = reader.ReadLine()) != null && userAgent == "*")
-                    {
-                        if (lines.StartsWith("Sitemap:"))
+           if ((!host.Contains(website.Host)))
                         {
-                            string[] line = lines.Split(' ');
-                            siteMaps.Add(line[1]);
-                        }
-                        else if (lines.StartsWith("User-agent:"))
-                        {
-                            string[] line = lines.Split(' ');
-                            userAgent = line[1].Trim();
-                        }
-                        else if (lines.StartsWith("Disallow:"))
-                        {
-                            string[] line = lines.Split(' ');
-                            disallow.Add(line[1]);
-                        }
-                    }
-                    return isValid(siteMaps);
-                }
-            }
+                            if (host.Count == 0)
+                                root = website;
+                            host.Add(robots.Host);
+                            /*try
+                          {
+                              string contentsOfRobotsTxtFile = new WebClient().DownloadString("uri");
+                              List<string> siteMaps = new List<string>();
+                              string userAgent = "*";
+                              using (var reader = new StreamReader(contentsOfRobotsTxtFile))
+                              {
+                                  string lines;
+                                  while ((lines = reader.ReadLine()) != null && userAgent == "*")
+                                  {
+                                      if (lines.StartsWith("Sitemap:"))
+                                      {
+                                          string[] line = lines.Split(' ');
+                                          siteMaps.Add(line[1]);
+                                      }
+                                      else if (lines.StartsWith("User-agent:"))
+                                      {
+                                          string[] line = lines.Split(' ');
+                                          userAgent = line[1].Trim();
+                                      }
+                                      else if (lines.StartsWith("Disallow:"))
+                                      {
+                                          string[] line = lines.Split(' ');
+                                          disallow.Add(line[1]);
+                                      }
+                                  }
+                                  return isValid(siteMaps);
+                              }
+                          }
+                          catch {/*No Robots.txt file} */
+                        } 
             if (website.ToString().Contains("sitemaps"))
                 return siteMapUrls(website);
             else
                 return listOfLinks(website);
         }
 
-        private List<Uri> listOfLinks(Uri website)
+        private List<string> listOfLinks(Uri website)
         {
             List<string> hyperlinks = new List<string>();
-            HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc = web.Load(website.ToString());
-            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//a"))
+            try
             {
-                if (node.Attributes.Contains("href") && node.Attributes["href"].Value.ToString().Contains(root.Host + "/") &&
-                    (node.Attributes["href"].Value.ToString().Contains(".html") || node.Attributes["href"].Value.ToString().Contains(".htm")))
-                    hyperlinks.Add(node.Attributes["href"].Value);
+                HtmlWeb web = new HtmlWeb();
+                HtmlDocument doc = web.Load(website.ToString());
+                foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//a"))
+                {
+                    if (node.Attributes.Contains("href"))
+                    {
+                        string link = node.Attributes["href"].Value.ToString();
+                        if (link.StartsWith("http:///"))
+                            link = link.Insert(7, website.Host);
+                        if (link.Contains(root.Host + "/") && (link.Contains(".html") || link.Contains(".htm")))
+                            hyperlinks.Add(node.Attributes["href"].Value);
+                    }
+                }
+                return isValid(hyperlinks);
             }
-            return isValid(hyperlinks);
+            catch
+            {
+               hyperlinks.Add("ERROR 408: Request Timed-Out when accessing " + website);
+               return hyperlinks;
+            }  
         }
 
-        private List<Uri> siteMapUrls(Uri website)
+        private List<string> siteMapUrls(Uri website)
         {
             List<string> siteMaps = new List<string>();
             XmlDocument web = new XmlDocument();
             web.Load(website.ToString());
             foreach (XmlNode node in web.GetElementsByTagName("loc"))
             {
-                if (node.InnerText.Contains("http") && node.InnerText.Contains(root.Host))
+                if (node.InnerText.Contains("http") && node.InnerText.Contains(root.Host + "/"))
                     siteMaps.Add(node.InnerText);
             }
             return isValid(siteMaps); 
         }
 
-        private List<Uri> isValid(List<string> hyperlinks)
+        private List<string> isValid(List<string> hyperlinks)
         {
-            List<Uri> validLinks = new List<Uri>();
+            List<string> validLinks = new List<string>();
             foreach (string link in hyperlinks)
             {
                 bool add = true;
@@ -142,8 +164,7 @@ namespace WorkerRole1
                 }
                 if (add)
                 {
-                    Uri validLink = new UriBuilder(link).Uri;
-                    validLinks.Add(validLink);
+                    validLinks.Add(link);
                 }
             }
             return validLinks;

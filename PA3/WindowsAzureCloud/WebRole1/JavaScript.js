@@ -14,12 +14,12 @@ function startCrawling() {
 }
 
 function startCallback(result) {
-    var RsltElem = document.getElementById("startMessage");
+    var RsltElem = document.getElementById("commandMessage");
     RsltElem.innerHTML = result;
 }
 
 function retrieveWebsite() {
-    var elem = document.getElementById("url");
+    var elem = document.getElementById("website");
     WebRole1.admin.GetPageTitle(elem.value, websiteCallback);
 }
 
@@ -34,18 +34,9 @@ function stopCrawling() {
 }
 
 function stopCallback(result) {
-    var RsltElem = document.getElementById("stopMessage");
+    var RsltElem = document.getElementById("commandMessage");
     RsltElem.innerHTML = result;
 }    
-
-function clearAll() {
-    WebRole1.admin.ClearData(clearCallback);
-}
-
-function clearCallback(result) {
-    var RsltElem = document.getElementById("clearMessage");
-    RsltElem.innerHTML = result;
-}
 
 function crawlerStatus() {
     WebRole1.admin.CrawlerStatus(statusCallback);
@@ -81,7 +72,7 @@ function lastTenUrls() {
 
 function lastTenCallback(result) {
     var RsltElem = document.getElementById("lastTenMessage");
-    var res = result.replace(" ", " <Br/> ")
+    var res = result
     RsltElem.innerHTML = res;
 }
                    

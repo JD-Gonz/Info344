@@ -46,3 +46,5 @@ C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\obj\Debug\Wo
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\HtmlAgilityPack.dll
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\HtmlAgilityPack.pdb
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\HtmlAgilityPack.xml
+C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\RobotsTxt.dll
+C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Debug\RobotsTxt.xml
