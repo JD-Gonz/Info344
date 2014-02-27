@@ -9,7 +9,7 @@ namespace WorkerRole1
 {
     public class UriEntity : TableEntity
     {
-        public UriEntity(string domainName, string url, string name, DateTime date)
+        public UriEntity(string domainName, string url, string name, string date)
         {
             this.PartitionKey = domainName;
             this.RowKey = url;
@@ -18,6 +18,6 @@ namespace WorkerRole1
         }
         public UriEntity() { }
         public string Name { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
     }
 }

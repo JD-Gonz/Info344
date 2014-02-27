@@ -37,16 +37,17 @@ namespace WebRole1
         [WebMethod]
         public string StartCrawling(string website)
         {
-            if (!string.IsNullOrEmpty(website))
+            try
             {
                 CloudQueue commandQueue = CreateQueue("commandqueue");
                 CloudQueueMessage message = new CloudQueueMessage("Start http://" + website);
                 commandQueue.AddMessage(message);
-                return "Succesfully added: " + website + " to the queue";
+                return "Succesfully began Crawling: " + website;
             }
-            else
+            catch
+            { 
                 return "Please enter a valid website";
-            
+            }
         }
 
         [WebMethod]
@@ -95,24 +96,22 @@ namespace WebRole1
         [WebMethod]
         public string Errors()
         {
-            if (string.IsNullOrEmpty(state))
+            try
             {
                 CloudTable urlTable = CreateTable("errortable");
                 TableQuery<ErrorEntity> query = new TableQuery<ErrorEntity>()
-                .Where(TableQuery.CombineFilters(
-                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "Error"),
-                TableOperators.And,
-                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, "Error"))
-                );
+                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "Error"));
                 string result = "";
-                foreach (ErrorEntity entity in urlTable.ExecuteQuery(query))
-                {
-                    result += entity.Description + " <Br/> "; 
-                }
-                return result;
+                    foreach (ErrorEntity entity in urlTable.ExecuteQuery(query))
+                    {
+                        result += entity.Description + " <Br/> ";
+                    }
+                    return result;
             }
-            else
-                return "Can not retrieve data at this time"; 
+            catch
+            { 
+                return "Can not retrieve data at this time";
+            }
         }
 
 
@@ -135,7 +134,7 @@ namespace WebRole1
         [WebMethod]
         public string numberOfURLsCrawled()
         {
-            if (string.IsNullOrEmpty(state))
+           try
             {
                 IEnumerable<ResultEntity> urlTable = query();
                 string result = "0";
@@ -145,15 +144,18 @@ namespace WebRole1
                 }
                 return result;
             }
-            else
-                return "Can not retrieve data at this time";
+            catch
+           {
+                return "Can not retrieve data at this time"; 
+           }
+                
 
         }
 
         [WebMethod]
         public string LastTenURLsCrawled()
         {
-            if (string.IsNullOrEmpty(state))
+           try
             {
                 IEnumerable<ResultEntity> urlTable = query();
                  string lastTen = "";
@@ -163,8 +165,10 @@ namespace WebRole1
                 }
                 return lastTen.Replace(" ", " <Br/> ");
             }
-            else
-                return "Can not retrieve data at this time";
+            catch
+           {
+               return "Can not retrieve data at this time";
+           }
         }
 
         [WebMethod]
@@ -178,7 +182,7 @@ namespace WebRole1
         [WebMethod]
         public string SizeOfTable()
         {
-            if (string.IsNullOrEmpty(state))
+            try
             {
                 IEnumerable<ResultEntity> urlTable = query();
                 string result = "0";
@@ -188,14 +192,16 @@ namespace WebRole1
                 }
                 return result;
             }
-             else
-                 return "Can not retrieve data at this time";
+             catch
+            {
+                return "Can not retrieve data at this time";
+            }
         }
 
         [WebMethod]
         public string CrawlerStatus()
         {
-            if (string.IsNullOrEmpty(state))
+            try
             {
                 IEnumerable<ResultEntity> urlTable = query();
                 string result = "";
@@ -205,8 +211,10 @@ namespace WebRole1
                 }
                 return result;
             }
-            else
-                return "Stopping/Clearing Crawler, This may take a few minutes";
+            catch
+            {
+                return "Stopped/Cleared";
+            }
         }
 
         private IEnumerable<ResultEntity> query()
@@ -233,12 +241,24 @@ namespace WebRole1
 
         private CloudTable CreateTable(string refrence)
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
+            try
+            {
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
                 CloudConfigurationManager.GetSetting("StorageConnectionString"));
-            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-            CloudTable table = tableClient.GetTableReference(refrence);
-            table.CreateIfNotExists();
-            return table;
+                CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+                CloudTable table = tableClient.GetTableReference(refrence);
+                table.CreateIfNotExists();
+                return table;
+            }
+            catch
+            {
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
+                CloudConfigurationManager.GetSetting("StorageConnectionString"));
+                CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+                CloudTable table = tableClient.GetTableReference(refrence);
+                return table;
+            }
+            
         }
     }
 }

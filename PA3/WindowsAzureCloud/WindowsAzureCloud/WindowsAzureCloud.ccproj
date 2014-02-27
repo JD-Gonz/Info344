@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CacheWorkerRole1Content\" />
+    <Folder Include="Profiles" />
     <Folder Include="WebRole1Content\" />
     <Folder Include="WorkerRole1Content\" />
   </ItemGroup>
@@ -69,6 +70,9 @@
     <Content Include="WorkerRole1Content\diagnostics.wadcfg">
       <SubType>Content</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PublishProfile Include="Profiles\dannycloudProduction.azurePubxml" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>

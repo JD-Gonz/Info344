@@ -62,7 +62,7 @@ namespace WorkerRole1
                             }
                             else
                             {
-                                ErrorEntity result = new ErrorEntity("ERROR 408: Attribute Request Timed-Out when accessing " + link);
+                                ErrorEntity result = new ErrorEntity(website.AbsolutePath, "ERROR 408: Attribute Request Timed-Out when accessing: " + website);
                                 TableOperation update = TableOperation.InsertOrReplace(result);
                                 errorTable.Execute(update);
                             }
@@ -105,7 +105,8 @@ namespace WorkerRole1
 
             // For information on handling configuration changes
             // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
-            state = "idle";
+
+            state = "Loading";
             crawler = new Crawler();
             webQueue = CreateQueue("websitequeue");
             commandQueue = CreateQueue("commandqueue");
@@ -117,6 +118,13 @@ namespace WorkerRole1
 
         private void startCrawling(string website)
         {
+            state = "Idle";
+            crawler = new Crawler();
+            webQueue = CreateQueue("websitequeue");
+            commandQueue = CreateQueue("commandqueue");
+            webTable = CreateTable("websitetable");
+            resultsTable = CreateTable("resulttable");
+            errorTable = CreateTable("errortable");
             Uri link = new UriBuilder(website).Uri;
             ResultEntity result = new ResultEntity(state, crawler.getLastUrls(), crawler.getTableSize(), sitesCrawled);
             TableOperation update = TableOperation.InsertOrReplace(result);
@@ -128,11 +136,12 @@ namespace WorkerRole1
         private void stopCrawling()
         {
             webQueue.Clear();
+            crawler = null;
+            commandQueue.Clear();
             webTable.DeleteIfExists();
             resultsTable.DeleteIfExists();
             errorTable.DeleteIfExists();
             state = "Stopped/Data Cleared";
-
         }
 
         private CloudQueue CreateQueue(string refrence)
@@ -161,7 +170,7 @@ namespace WorkerRole1
             {
                 if (website.StartsWith("ERROR"))
                 {
-                    ErrorEntity result = new ErrorEntity(website);
+                    ErrorEntity result = new ErrorEntity(website, website);
                     TableOperation update = TableOperation.InsertOrReplace(result);
                     errorTable.Execute(update);
                 }

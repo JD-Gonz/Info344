@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace WorkerRole1
 {
     public class ErrorEntity : TableEntity
     {
-        public ErrorEntity(string description)
+        public ErrorEntity(string url, string description)
         {
             this.PartitionKey = "Error";
-            this.RowKey = "Error";
+            this.RowKey = HttpUtility.UrlEncode(url);
             this.Description = description;
         }
 

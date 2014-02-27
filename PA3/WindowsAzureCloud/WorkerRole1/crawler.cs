@@ -16,6 +16,7 @@ namespace WorkerRole1
     {
         private  Uri root;
         private  HashSet<string> host;
+        private  HashSet<string> inQueue;
         private  Hashtable visited;
         private  List<string> disallow;
 
@@ -24,6 +25,7 @@ namespace WorkerRole1
             root = null;
             host = new HashSet<string>();
             visited = new Hashtable();
+            inQueue = new HashSet<string>();
             disallow = new List<string>();
         }
 
@@ -57,54 +59,61 @@ namespace WorkerRole1
             }  
         }
 
-        public DateTime getDate(Uri website)
+        public string getDate(Uri website)
         {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(website);
-            HttpWebResponse res = (HttpWebResponse)req.GetResponse();
-            return res.LastModified;
+            try
+            {
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(website);
+                HttpWebResponse res = (HttpWebResponse)req.GetResponse();
+                return res.LastModified.ToString();
+            }
+            catch
+            {
+                return null;
+            }  
 
         }
 
         public List<string> startCrawling(Uri website)
         {
             visited.Add(visited.Count + 1, website);
-            Uri robots = new UriBuilder(website + "//robots.txt").Uri;
+            Uri robots = new UriBuilder(website + "robots.txt").Uri;
            if ((!host.Contains(website.Host)))
+            {
+                if (host.Count == 0)
+                    root = website;
+                host.Add(robots.Host);
+                try
+                {
+                    Stream data = new WebClient().OpenRead(robots);
+                    StreamReader read = new StreamReader(data);
+                    List<string> siteMaps = new List<string>();
+                    string userAgent = "*";
+                    {
+                        string lines;
+                        while ((lines = read.ReadLine()) != null && userAgent == "*")
                         {
-                            if (host.Count == 0)
-                                root = website;
-                            host.Add(robots.Host);
-                            /*try
-                          {
-                              string contentsOfRobotsTxtFile = new WebClient().DownloadString("uri");
-                              List<string> siteMaps = new List<string>();
-                              string userAgent = "*";
-                              using (var reader = new StreamReader(contentsOfRobotsTxtFile))
-                              {
-                                  string lines;
-                                  while ((lines = reader.ReadLine()) != null && userAgent == "*")
-                                  {
-                                      if (lines.StartsWith("Sitemap:"))
-                                      {
-                                          string[] line = lines.Split(' ');
-                                          siteMaps.Add(line[1]);
-                                      }
-                                      else if (lines.StartsWith("User-agent:"))
-                                      {
-                                          string[] line = lines.Split(' ');
-                                          userAgent = line[1].Trim();
-                                      }
-                                      else if (lines.StartsWith("Disallow:"))
-                                      {
-                                          string[] line = lines.Split(' ');
-                                          disallow.Add(line[1]);
-                                      }
-                                  }
-                                  return isValid(siteMaps);
-                              }
-                          }
-                          catch {/*No Robots.txt file} */
-                        } 
+                            if (lines.StartsWith("Sitemap:"))
+                            {
+                                string[] line = lines.Split(' ');
+                                siteMaps.Add(line[1]);
+                            }
+                            else if (lines.StartsWith("User-agent:"))
+                            {
+                                string[] line = lines.Split(' ');
+                                userAgent = line[1].Trim();
+                            }
+                            else if (lines.StartsWith("Disallow:"))
+                            {
+                                string[] line = lines.Split(' ');
+                                disallow.Add(line[1]);
+                            }
+                        }
+                        return isValid(siteMaps);
+                    }
+                }
+                catch {/*No Robots.txt file*/}
+            } 
             if (website.ToString().Contains("sitemaps"))
                 return siteMapUrls(website);
             else
@@ -125,7 +134,7 @@ namespace WorkerRole1
                         string link = node.Attributes["href"].Value.ToString();
                         if (link.StartsWith("http:///"))
                             link = link.Insert(7, website.Host);
-                        if (link.Contains(root.Host + "/") && (link.Contains(".html") || link.Contains(".htm")))
+                        if (link.Contains(root.Host + "/") && (link.Contains(".html") || link.Contains(".htm")) && !visited.ContainsValue(link) && !inQueue.Contains(link))
                             hyperlinks.Add(node.Attributes["href"].Value);
                     }
                 }
@@ -133,7 +142,7 @@ namespace WorkerRole1
             }
             catch
             {
-               hyperlinks.Add("ERROR 408: Request Timed-Out when accessing " + website);
+               hyperlinks.Add("ERROR 408: Request Timed-Out when accessing: " + website);
                return hyperlinks;
             }  
         }
@@ -164,6 +173,7 @@ namespace WorkerRole1
                 }
                 if (add)
                 {
+                    inQueue.Add(link);
                     validLinks.Add(link);
                 }
             }
