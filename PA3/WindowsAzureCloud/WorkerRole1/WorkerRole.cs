@@ -58,7 +58,7 @@ namespace WorkerRole1
                                 webTable.Execute(insert);
                                 sitesCrawled++;
 
-                            if (link.Name != null && link.Date != null)
+                            if (link.Name == null && link.Date == null)
                             {
                                 ErrorEntity result = new ErrorEntity(website.AbsolutePath, "ERROR 408: Request Timed-Out uptaining an attribute from: " + website);
                                 TableOperation update = TableOperation.InsertOrReplace(result);
