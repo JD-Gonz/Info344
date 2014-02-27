@@ -53,22 +53,19 @@ namespace WorkerRole1
                         {
                             UriEntity link = new UriEntity(website.Host, HttpUtility.UrlEncode(website.AbsoluteUri),
                                                            crawler.getTitle(website), crawler.getDate(website));
-                            if (link.Name != null && link.Date != null)
-                            {
 
                                 TableOperation insert = TableOperation.InsertOrReplace(link);
                                 webTable.Execute(insert);
                                 sitesCrawled++;
-                            }
-                            else
+
+                            if (link.Name != null && link.Date != null)
                             {
-                                ErrorEntity result = new ErrorEntity(website.AbsolutePath, "ERROR 408: Attribute Request Timed-Out when accessing: " + website);
+                                ErrorEntity result = new ErrorEntity(website.AbsolutePath, "ERROR 408: Request Timed-Out uptaining an attribute from: " + website);
                                 TableOperation update = TableOperation.InsertOrReplace(result);
                                 errorTable.Execute(update);
                             }
                             addToQueue(crawler.startCrawling(website));
                         }
-
                     }
                     if (state != "Stopped/Data Cleared")
                     {
@@ -76,7 +73,6 @@ namespace WorkerRole1
                         TableOperation update = TableOperation.InsertOrReplace(result);
                         resultsTable.Execute(update);
                     }
-                    
                 }
                 else if (command != null)
                 {

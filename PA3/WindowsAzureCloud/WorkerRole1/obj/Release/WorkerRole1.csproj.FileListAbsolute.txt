@@ -47,3 +47,4 @@ C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Release\
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\bin\Release\zh-Hant\System.Spatial.resources.dll
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\obj\Release\WorkerRole1.dll
 C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\obj\Release\WorkerRole1.pdb
+C:\Users\iguest\Documents\Info344\PA3\WindowsAzureCloud\WorkerRole1\obj\Release\WorkerRole1.csprojResolveAssemblyReference.cache
