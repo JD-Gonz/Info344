@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "SearchEngine", "SearchEngine\SearchEngine.ccproj", "{9E2A9FEA-85A7-43E2-B2F3-3B07839D2E49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRole", "WebRole\WebRole.csproj", "{C967EDC0-61F1-4638-90DF-8E453EB5117A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerRole", "WorkerRole\WorkerRole.csproj", "{C84D0A04-3D89-4BB8-8B1E-171EB39729DB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E2A9FEA-85A7-43E2-B2F3-3B07839D2E49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E2A9FEA-85A7-43E2-B2F3-3B07839D2E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E2A9FEA-85A7-43E2-B2F3-3B07839D2E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E2A9FEA-85A7-43E2-B2F3-3B07839D2E49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C967EDC0-61F1-4638-90DF-8E453EB5117A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C967EDC0-61F1-4638-90DF-8E453EB5117A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C967EDC0-61F1-4638-90DF-8E453EB5117A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C967EDC0-61F1-4638-90DF-8E453EB5117A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C84D0A04-3D89-4BB8-8B1E-171EB39729DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C84D0A04-3D89-4BB8-8B1E-171EB39729DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C84D0A04-3D89-4BB8-8B1E-171EB39729DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C84D0A04-3D89-4BB8-8B1E-171EB39729DB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
