@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="dashboard.aspx.cs" Inherits="WebRole1.dashboard" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Dashboard.aspx.cs" Inherits="WebRole.Dashboard" %>
 
 <!DOCTYPE html>
 
@@ -6,15 +6,14 @@
 <head id="Head1" runat="server">
 <link rel="stylesheet" href="Styles.css"/>
 
-    <title>Website Crawler</title>
+    <title>Crawler Dashboard</title>
 
 </head>
-
 <body>
     <form id="form1" runat="server">
     <asp:ScriptManager runat="server" ID="scriptManager">
                 <Services>
-                    <asp:ServiceReference path="admin.asmx" />
+                    <asp:ServiceReference path="WebService.asmx" />
                 </Services>
             </asp:ScriptManager>
             <div>
@@ -35,6 +34,12 @@
                 <input id="stopButton" type="button" value="Stop / Clear" onclick="stopCrawling()" />
 
                 <hr/>
+                <h3>Titles Loaded Into Trie</h3>
+                <div id="trieMessege"></div>
+
+                <h3>Last Title Loaded Into Trie</h3>
+                <div id="lastTrieMessege"></div>
+
 
                 <h3>RAM Available And CPU Utilization%</h3>
                 <div id="performanceMessage"></div>

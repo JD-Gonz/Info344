@@ -7,10 +7,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebRole1 {
+namespace WebRole {
     
     
-    public partial class dashboard {
+    public partial class Dashboard {
         
         /// <summary>
         /// Head1 control.

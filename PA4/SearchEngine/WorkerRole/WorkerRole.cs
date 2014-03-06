@@ -47,24 +47,35 @@ namespace WorkerRole
                         Uri website = new UriBuilder(url.AsString.Replace("www.", "")).Uri;
                         if (website.ToString().Contains("sitemaps"))
                         {
-                            addToQueue(crawler.startCrawling(website));
+                            DateTime siteDate;
+                            if (DateTime.TryParse(crawler.getDate(website), out siteDate))
+                            {
+                                if ((siteDate > DateTime.Now.AddMonths(-3)))
+                                {
+                                    addToQueue(crawler.startCrawling(website));
+                                }
+                            }
                         }
                         else
                         {
-                            UriEntity link = new UriEntity(website.Host, HttpUtility.UrlEncode(website.AbsoluteUri),
-                                                           crawler.getTitle(website), crawler.getDate(website));
-
-                            TableOperation insert = TableOperation.InsertOrReplace(link);
-                            webTable.Execute(insert);
-                            sitesCrawled++;
-
-                            if (link.Name == null && link.Date == null)
+                            
+                            string fullTitle = preProccess(crawler.getTitle(website));
+                            string[] titles = fullTitle.Split(' ');
+                            foreach (string title in titles)
                             {
-                                ErrorEntity result = new ErrorEntity(website.AbsolutePath, "ERROR 408: Request Timed-Out uptaining an attribute from: " + website);
-                                TableOperation update = TableOperation.InsertOrReplace(result);
-                                errorTable.Execute(update);
+                                UriEntity link = new UriEntity(title, HttpUtility.UrlEncode(website.AbsoluteUri), crawler.getDate(website));
+                                DateTime siteDate;
+                                if (DateTime.TryParse(link.Date, out siteDate))
+                                {
+                                    if ((siteDate >= DateTime.Now.AddMonths(-3)))
+                                    {
+                                        TableOperation insert = TableOperation.InsertOrReplace(link);
+                                        webTable.Execute(insert);
+                                        addToQueue(crawler.startCrawling(website));
+                                        sitesCrawled++;
+                                    }
+                                }
                             }
-                            addToQueue(crawler.startCrawling(website));
                         }
                     }
                     if (state != "Stopped/Data Cleared")
@@ -177,6 +188,21 @@ namespace WorkerRole
                     webQueue.AddMessage(message);
                 }
             }
+        }
+        
+        private string preProccess (string title)
+        {
+            string reconstructedline = "";
+            foreach (char letter in title)
+            {
+                if (letter == '_')
+                    reconstructedline += " ";
+                else if (letter == 32 || letter == 46 || (letter > 65 && letter < 90) || (letter > 97 && letter < 122))
+                {
+                    reconstructedline += letter;
+                }   
+            }
+            return reconstructedline;
         }
     }
 }

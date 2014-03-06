@@ -6,6 +6,8 @@
     queueSize();
     tableSize();
     errorLog();
+    trieSize();
+    lastLoaded();
 }, 1000);
 
 function SearchTrie() {
@@ -15,7 +17,7 @@ function SearchTrie() {
     else {
         $.ajax({
             type: "POST",
-            url: "WebService1.asmx/querySuggestions",
+            url: "WebService.asmx/querySuggestions",
             data: '{word:"' + text + '"}',
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -48,26 +50,26 @@ function SearchTrie() {
 
 function startCrawling() {
     var elem = document.getElementById("website");
-    WebRole1.admin.StartCrawling(elem.value, startCallback);
+    WebRole.WebService.StartCrawling(elem.value, startCallback);
 }
 
 function startCallback(result) {
     var RsltElem = document.getElementById("commandMessage");
     RsltElem.innerHTML = result;
 }
-
-function retrieveWebsite() {
+/*
+function retrieveWebsites() {
     var elem = document.getElementById("website");
-    WebRole1.admin.GetPageTitle(elem.value, websiteCallback);
+    WebRole.WebService.GetPageTitle(elem.value, websiteCallback);
 }
 
 function websiteCallback(result) {
     var RsltElem = document.getElementById("queryMessage");
     RsltElem.innerHTML = result;
 }
-
+*/
 function stopCrawling() {
-    WebRole1.admin.StopCrawling(
+    WebRole.WebService.StopCrawling(
         stopCallback);
 }
 
@@ -77,7 +79,7 @@ function stopCallback(result) {
 }
 
 function crawlerStatus() {
-    WebRole1.admin.CrawlerStatus(statusCallback);
+    WebRole.WebService.CrawlerStatus(statusCallback);
 }
 
 function statusCallback(result) {
@@ -86,8 +88,7 @@ function statusCallback(result) {
 }
 
 function performanceCounters() {
-    WebRole1.admin.MachineCounters(
-        performanceCallback);
+    WebRole.WebService.MachineCounters(performanceCallback);
 }
 
 function performanceCallback(result) {
@@ -96,7 +97,7 @@ function performanceCallback(result) {
 }
 
 function crawledNum() {
-    WebRole1.admin.numberOfURLsCrawled(crawledCallback);
+    WebRole.WebService.numberOfURLsCrawled(crawledCallback);
 }
 
 function crawledCallback(result) {
@@ -105,7 +106,7 @@ function crawledCallback(result) {
 }
 
 function lastTenUrls() {
-    WebRole1.admin.LastTenURLsCrawled(lastTenCallback);
+    WebRole.WebService.LastTenURLsCrawled(lastTenCallback);
 }
 
 function lastTenCallback(result) {
@@ -115,7 +116,7 @@ function lastTenCallback(result) {
 }
 
 function queueSize() {
-    WebRole1.admin.SizeOfQueue(queueSizeCallback);
+    WebRole.WebService.SizeOfQueue(queueSizeCallback);
 }
 
 function queueSizeCallback(result) {
@@ -124,7 +125,7 @@ function queueSizeCallback(result) {
 }
 
 function tableSize() {
-    WebRole1.admin.SizeOfTable(tableSizeCallback);
+    WebRole.WebService.SizeOfTable(tableSizeCallback);
 }
 
 function tableSizeCallback(result) {
@@ -133,7 +134,7 @@ function tableSizeCallback(result) {
 }
 
 function errorLog() {
-    WebRole1.admin.Errors(errorLogCallback);
+    WebRole.WebService.Errors(errorLogCallback);
 }
 
 function errorLogCallback(result) {
@@ -141,6 +142,26 @@ function errorLogCallback(result) {
     RsltElem.innerHTML = result;
 }
 
+function trieSize() {
+    WebRole.WebService.trieCount(trieCallback);
+}
+
+function trieCallback(result) {
+    var RsltElem = document.getElementById("trieMessege");
+    RsltElem.innerHTML = result;
+}
+
+function lastLoaded() {
+    WebRole.WebService.lastLine(lastCallback);
+}
+
+function lastCallback(result) {
+    var RsltElem = document.getElementById("lastTrieMessege");
+    RsltElem.innerHTML = result;
+}
+
 $(function () {
+
+    // $('.search-button').click(retrieveWebsites());
 
 }); //doc ready()

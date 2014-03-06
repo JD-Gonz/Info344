@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAzure.Storage;
+﻿using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -13,6 +14,7 @@ using System.Web.Hosting;
 using System.Web.Script.Serialization;
 using System.Web.Script.Services;
 using System.Web.Services;
+using WorkerRole;
 
 namespace WebRole
 {
@@ -34,6 +36,8 @@ namespace WebRole
         private float ram;
         private float cpu;
         private string state;
+        private string line;
+        private int count;
 
         [WebMethod]
         public void preprocessFile(string input, string output)
@@ -71,11 +75,9 @@ namespace WebRole
             CloudBlobContainer container = blobClient.GetContainerReference("babyblob");
             if (container.Exists())
             {
-                int count = 0;
                 file = HostingEnvironment.ApplicationPhysicalPath + "\\data.txt";
                 foreach (IListBlobItem item in container.ListBlobs(null, false))
                 {
-                    count++;
                     if (item.GetType() == typeof(CloudBlockBlob))
                     {
                         CloudBlockBlob blob = (CloudBlockBlob)item;
@@ -89,17 +91,36 @@ namespace WebRole
         }
 
         [WebMethod]
-        public void populateTrie()
+        public string populateTrie()
         {
+            count = 0;
             library = new Trie();
+            PerformanceCounter ram = new PerformanceCounter("Memory", "Available MBytes");
+            ram.NextValue();
             using (StreamReader sr = File.OpenText(file))
             {
-                string line;
                 while ((line = sr.ReadLine()) != null)
                 {
+                    if (count % 1000 == 0 && ram.NextValue() <= 50)
+                        break;
+                    count++;
                     library.insertLine(line.ToLower());
                 }
+                
             }
+            return "pupulated succesfully " + ram.NextValue();
+        }
+
+        [WebMethod]
+        public int trieCount ()
+        {
+            return count;
+        }
+
+        [WebMethod]
+        public string lastLine ()
+        {
+            return line;
         }
 
         [WebMethod]
@@ -145,19 +166,13 @@ namespace WebRole
             {
                 try
                 {
-                    Uri uri = new UriBuilder(site.Replace("www.", "")).Uri;
                     CloudTable urlTable = CreateTable("websitetable");
                     TableQuery<UriEntity> query = new TableQuery<UriEntity>()
-                        .Where(TableQuery.CombineFilters(
-                        TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, uri.Host),
-                        TableOperators.And,
-                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, HttpUtility.UrlEncode(uri.AbsoluteUri)))
-                        );
+                        .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, site));
                     string result = "";
                     foreach (UriEntity entity in urlTable.ExecuteQuery(query))
                     {
-                        result = entity.Name + " " + entity.Date;
-                        break;
+                        result = entity.RowKey + " <Br/> ";
                     }
                     return result;
                 }
