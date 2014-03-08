@@ -24,6 +24,10 @@ namespace WorkerRole
         private CloudTable webTable;
         private CloudTable resultsTable;
         private CloudTable errorTable;
+        private PerformanceCounter ramCounter;
+        private PerformanceCounter cpuCounter;
+        private float ram;
+        private float cpu;
 
         public override void Run()
         {
@@ -80,7 +84,10 @@ namespace WorkerRole
                     }
                     if (state != "Stopped/Data Cleared")
                     {
-                        ResultEntity result = new ResultEntity(state, crawler.getLastUrls(), crawler.getTableSize(), sitesCrawled);
+                        ram = ramCounter.NextValue();
+                        cpu = cpuCounter.NextValue();
+                        ResultEntity result = new ResultEntity(state, crawler.getLastUrls(), crawler.getTableSize(), sitesCrawled,
+                                                               "RAM: " + (ram) + " MB | CPU: " + (cpu) + " %");
                         TableOperation update = TableOperation.InsertOrReplace(result);
                         resultsTable.Execute(update);
                     }
@@ -120,6 +127,10 @@ namespace WorkerRole
             webTable = CreateTable("websitetable");
             resultsTable = CreateTable("resulttable");
             errorTable = CreateTable("errortable");
+            ramCounter = new PerformanceCounter("Memory", "Available MBytes");
+            cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            ram = ramCounter.NextValue();
+            cpu = cpuCounter.NextValue();
             return base.OnStart();
         }
 
@@ -133,7 +144,10 @@ namespace WorkerRole
             resultsTable = CreateTable("resulttable");
             errorTable = CreateTable("errortable");
             Uri link = new UriBuilder(website).Uri;
-            ResultEntity result = new ResultEntity(state, crawler.getLastUrls(), crawler.getTableSize(), sitesCrawled);
+            ram = ramCounter.NextValue();
+            cpu = cpuCounter.NextValue();
+            ResultEntity result = new ResultEntity(state, crawler.getLastUrls(), crawler.getTableSize(), sitesCrawled,
+                                                   "RAM: " + (ram) + " MB | CPU: " + (cpu) + " %");
             TableOperation update = TableOperation.InsertOrReplace(result);
             resultsTable.Execute(update);
             CloudQueueMessage message = new CloudQueueMessage(link.ToString());

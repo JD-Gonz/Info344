@@ -22,7 +22,6 @@
                 <input id="website" type="text" placeholder="www.cnn.com"/>
                 <br />
                 <input id="startButton" type="button" value="Start" onclick="startCrawling()" />
-                <input id="queryButton" type="button" value="Search" onclick="retrieveWebsite()" />
                 
                 <div>
                     <div id="queryMessage"></div>

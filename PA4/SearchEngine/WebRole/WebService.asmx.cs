@@ -31,10 +31,6 @@ namespace WebRole
     {
         public static Trie library;
         public static string file;
-        private PerformanceCounter ramCounter;
-        private PerformanceCounter cpuCounter;
-        private float ram;
-        private float cpu;
         private string state;
         private string line;
         private int count;
@@ -101,7 +97,7 @@ namespace WebRole
             {
                 while ((line = sr.ReadLine()) != null)
                 {
-                    if (count % 1000 == 0 && ram.NextValue() <= 50)
+                    if (count % 1000 == 0 && ram.NextValue() <= 1000)
                         break;
                     count++;
                     library.insertLine(line.ToLower());
@@ -160,30 +156,30 @@ namespace WebRole
         }
 
         [WebMethod]
-        public string GetPageTitle(string site)
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string PageUrls(string site)
         {
             if (string.IsNullOrEmpty(state))
             {
+                List<string> json = new List<string>();
                 try
                 {
                     CloudTable urlTable = CreateTable("websitetable");
                     TableQuery<UriEntity> query = new TableQuery<UriEntity>()
                         .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, site));
-                    string result = "";
                     foreach (UriEntity entity in urlTable.ExecuteQuery(query))
                     {
-                        result = entity.RowKey + " <Br/> ";
+                        json.Add(entity.RowKey);
                     }
-                    return result;
+                    return new JavaScriptSerializer().Serialize(json.ToArray());
                 }
                 catch
                 {
-                    return "Provided URL could not be used";
+                    return new JavaScriptSerializer().Serialize(json.ToArray());
                 }
             }
             else
                 return "Can not retrieve data at this time";
-            
         }
 
         [WebMethod]
@@ -210,17 +206,20 @@ namespace WebRole
         [WebMethod]
         public string MachineCounters()
         {
-            if (ramCounter == null)
+            try
             {
-                ramCounter = new PerformanceCounter("Memory", "Available MBytes");
-                cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-                ram = ramCounter.NextValue();
-                cpu = cpuCounter.NextValue();
+                IEnumerable<ResultEntity> urlTable = query();
+                string counters = "";
+                foreach (ResultEntity entity in urlTable)
+                {
+                    counters = entity.Counters;
+                }
+                return counters;
             }
-            ram = ramCounter.NextValue();
-            cpu = cpuCounter.NextValue();
-
-            return ("RAM: " + (ram) + " MB | CPU: " + (cpu) + " %");
+            catch
+            {
+                return "Can not retrieve data at this time";
+            }
         }
 
         [WebMethod]

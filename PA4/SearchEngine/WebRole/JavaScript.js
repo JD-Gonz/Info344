@@ -10,44 +10,6 @@
     lastLoaded();
 }, 1000);
 
-function SearchTrie() {
-    var text = $("#text").val();
-    if (text == "")
-        $('.suggestions').hide();
-    else {
-        $.ajax({
-            type: "POST",
-            url: "WebService.asmx/querySuggestions",
-            data: '{word:"' + text + '"}',
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                var idx;
-                var template = $('.template');
-                var suggestions = $('.suggestions');
-                suggestions.empty();
-                var results = JSON.parse(data["d"]);
-                if (results == 0) {
-                    instance = template.clone();
-                    instance.find('.result').html("Sorry, No Suggestions Were Found");
-                    instance.removeClass('template');
-                    suggestions.fadeIn(500).append(instance);
-                }
-                for (idx = 0; idx < results.length; ++idx) {
-                    instance = template.clone();
-                    instance.find('.result').html(results[idx]);
-                    instance.removeClass('template');
-                    suggestions.fadeIn(500).append(instance);
-                }
-            },
-            error: function (data) {
-                $('.suggestions').empty();
-            }
-        });
-        $('.suggestions').show();
-    }
-}
-
 function startCrawling() {
     var elem = document.getElementById("website");
     WebRole.WebService.StartCrawling(elem.value, startCallback);
@@ -57,17 +19,7 @@ function startCallback(result) {
     var RsltElem = document.getElementById("commandMessage");
     RsltElem.innerHTML = result;
 }
-/*
-function retrieveWebsites() {
-    var elem = document.getElementById("website");
-    WebRole.WebService.GetPageTitle(elem.value, websiteCallback);
-}
 
-function websiteCallback(result) {
-    var RsltElem = document.getElementById("queryMessage");
-    RsltElem.innerHTML = result;
-}
-*/
 function stopCrawling() {
     WebRole.WebService.StopCrawling(
         stopCallback);
@@ -162,6 +114,68 @@ function lastCallback(result) {
 
 $(function () {
 
-    // $('.search-button').click(retrieveWebsites());
+    $('.prefix').keyup(function () {
+        var text = $("#text").val();
+        if (text == "")
+            $('.suggestions').hide();
+        else {
+            $.ajax({
+                type: "POST",
+                url: "WebService.asmx/querySuggestions",
+                data: '{word:"' + text + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var idx;
+                    var template = $('.template');
+                    var suggestions = $('.suggestions');
+                    suggestions.empty();
+                    var results = JSON.parse(data["d"]);
+                    for (idx = 0; idx < results.length; ++idx) {
+                        instance = template.clone();
+                        instance.find('.result').html(results[idx]);
+                        instance.removeClass('template');
+                        suggestions.fadeIn(500).append(instance);
+                    }
+                },
+                error: function (data) {
+                    $('.suggestions').empty();
+                }
+            });
+            $('.suggestions').show();
+        }
+    });
+
+    $('.search-button').click(function () {
+        var text = $("#text").val();
+        if (text == "")
+            $('.urls').hide();
+        else {
+            $.ajax({
+                type: "POST",
+                url: "WebService.asmx/PageUrls",
+                data: '{word:"' + text + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var idx;
+                    var template = $('.template');
+                    var suggestions = $('.urls');
+                    suggestions.empty();
+                    var results = JSON.parse(data["d"]);
+                    for (idx = 0; idx < results.length; ++idx) {
+                        instance = template.clone();
+                        instance.find('.result').html(results[idx]);
+                        instance.removeClass('template');
+                        suggestions.fadeIn(500).append(instance);
+                    }
+                },
+                error: function (data) {
+                    $('.urls').empty();
+                }
+            });
+            $('.urls').show();
+        }
+    });
 
 }); //doc ready()
