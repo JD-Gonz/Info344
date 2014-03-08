@@ -9,16 +9,15 @@
 <body>
     <div class="container center">
 
-        <div class="input-group col-md-6 col-md-offset-3">
-            <input type="text" class="form-control prefix" id="text" placeholder="Enter a Query">
-            <span class="input-group-btn">
-                <button id="queryButton"  class="btn btn-default search-button" type="button">Search</button>
-            </span>
-        </div><!-- /input-group -->
-        <!-- container for the generated suggestions -->
-        <div class="suggestions" id="results"></div>
-        <div class="urls" id="websiteUrls"></div>
-    </div>
+        <form id="queryForm">
+            <input type="text" id="prefix" class="form-control" placeholder=" enter a query" onkeyup="SearchTrie()" />
+            <input type="submit" id="sendQuery" class="btn btn-default" />
+        </form>  
+
+            <!-- container for the generated suggestions -->
+            <div class="suggestions" id="results"></div>
+            <div class="urls" id="websiteUrls"></div>
+</div>
 
     <!-- template card for each entry
         this will not be displayed, only used by code -->

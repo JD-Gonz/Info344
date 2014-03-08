@@ -8,7 +8,7 @@
     errorLog();
     trieSize();
     lastLoaded();
-}, 1000);
+}, 5000);
 
 function startCrawling() {
     var elem = document.getElementById("website");
@@ -114,68 +114,69 @@ function lastCallback(result) {
 
 $(function () {
 
-    $('.prefix').keyup(function () {
-        var text = $("#text").val();
-        if (text == "")
-            $('.suggestions').hide();
-        else {
-            $.ajax({
-                type: "POST",
-                url: "WebService.asmx/querySuggestions",
-                data: '{word:"' + text + '"}',
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    var idx;
-                    var template = $('.template');
-                    var suggestions = $('.suggestions');
-                    suggestions.empty();
-                    var results = JSON.parse(data["d"]);
-                    for (idx = 0; idx < results.length; ++idx) {
-                        instance = template.clone();
-                        instance.find('.result').html(results[idx]);
-                        instance.removeClass('template');
-                        suggestions.fadeIn(500).append(instance);
-                    }
-                },
-                error: function (data) {
-                    $('.suggestions').empty();
-                }
-            });
-            $('.suggestions').show();
-        }
-    });
-
-    $('.search-button').click(function () {
-        var text = $("#text").val();
-        if (text == "")
-            $('.urls').hide();
-        else {
-            $.ajax({
-                type: "POST",
-                url: "WebService.asmx/PageUrls",
-                data: '{word:"' + text + '"}',
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    var idx;
-                    var template = $('.template');
-                    var suggestions = $('.urls');
-                    suggestions.empty();
-                    var results = JSON.parse(data["d"]);
-                    for (idx = 0; idx < results.length; ++idx) {
-                        instance = template.clone();
-                        instance.find('.result').html(results[idx]);
-                        instance.removeClass('template');
-                        suggestions.fadeIn(500).append(instance);
-                    }
-                },
-                error: function (data) {
-                    $('.urls').empty();
-                }
-            });
-            $('.urls').show();
-        }
+    $('#queryForm').submit(function () {
+        ReturnUrls();
+        return false;
     });
 
 }); //doc ready()
+
+function SearchTrie() {
+    var text = $("#prefix").val();
+    if (text == "")
+        $('.suggestions').hide();
+    else {
+        $.ajax({
+            type: "POST",
+            url: "WebService.asmx/querySuggestions",
+            data: '{word:"' + text + '"}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                var idx;
+                var template = $('.template');
+                var suggestions = $('.suggestions');
+                suggestions.empty();
+                var results = JSON.parse(data["d"]);
+                for (idx = 0; idx < results.length; ++idx) {
+                    instance = template.clone();
+                    instance.find('.result').html(results[idx]);
+                    instance.removeClass('template');
+                    suggestions.fadeIn(500).append(instance);
+                }
+            },
+            error: function (data) {
+                $('.suggestions').empty();
+            }
+        });
+        $('.suggestions').show();
+    }
+}
+
+function ReturnUrls()
+{
+    var text = $("#prefix").val();
+    $.ajax({
+        type: "POST",
+        url: "WebService.asmx/PageUrls",
+        data: '{word:"' + text + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            var idx;
+            var template = $('.template');
+            var suggestions = $('.urls');
+            suggestions.empty();
+            var results = JSON.parse(data["d"]);
+            for (idx = 0; idx < results.length; ++idx) {
+                instance = template.clone();
+                instance.find('.result').html(results[idx]);
+                instance.removeClass('template');
+                suggestions.fadeIn(500).append(instance);
+            }
+        },
+        error: function (data) {
+            $('.urls').empty();
+        }
+    });
+}

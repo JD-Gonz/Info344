@@ -29,11 +29,11 @@ namespace WebRole
     [ScriptService]
     public class WebService : System.Web.Services.WebService
     {
-        public static Trie library;
-        public static string file;
-        private string state;
-        private string line;
-        private int count;
+        private static Trie library;
+        private static string file;
+        private static string state;
+        private static string line;
+        private static int count;
 
         [WebMethod]
         public void preprocessFile(string input, string output)
@@ -90,6 +90,7 @@ namespace WebRole
         public string populateTrie()
         {
             count = 0;
+            line = "";
             library = new Trie();
             PerformanceCounter ram = new PerformanceCounter("Memory", "Available MBytes");
             ram.NextValue();
@@ -97,7 +98,7 @@ namespace WebRole
             {
                 while ((line = sr.ReadLine()) != null)
                 {
-                    if (count % 1000 == 0 && ram.NextValue() <= 1000)
+                    if (count % 10000 == 0 && ram.NextValue() <= 1000)
                         break;
                     count++;
                     library.insertLine(line.ToLower());
