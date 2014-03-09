@@ -62,23 +62,19 @@ namespace WorkerRole
                         }
                         else
                         {
-                            
-                            string fullTitle = preProccess(crawler.getTitle(website));
-                            string[] titles = fullTitle.Split(' ');
-                            foreach (string title in titles)
+                            DateTime siteDate;
+                            if (DateTime.TryParse(crawler.getDate(website), out siteDate) && (siteDate >= DateTime.Now.AddMonths(-3)))
                             {
-                                UriEntity link = new UriEntity(title, HttpUtility.UrlEncode(website.AbsoluteUri), crawler.getDate(website));
-                                DateTime siteDate;
-                                if (DateTime.TryParse(link.Date, out siteDate))
+                                addToQueue(crawler.startCrawling(website));
+                                sitesCrawled++;
+                                string fullTitle = preProccess(crawler.getTitle(website));
+                                string[] titles = fullTitle.Split(' ');
+                                foreach (string title in titles)
                                 {
-                                    if ((siteDate >= DateTime.Now.AddMonths(-3)))
-                                    {
-                                        TableOperation insert = TableOperation.InsertOrReplace(link);
-                                        webTable.Execute(insert);
-                                        addToQueue(crawler.startCrawling(website));
-                                        sitesCrawled++;
-                                    }
-                                }
+                                    UriEntity link = new UriEntity(title, HttpUtility.UrlEncode(website.AbsoluteUri), crawler.getDate(website));
+                                    TableOperation insert = TableOperation.InsertOrReplace(link);
+                                    webTable.Execute(insert);
+                                }  
                             }
                         }
                     }

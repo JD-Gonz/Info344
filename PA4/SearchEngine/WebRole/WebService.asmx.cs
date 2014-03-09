@@ -158,19 +158,24 @@ namespace WebRole
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public string PageUrls(string site)
+        public string PageUrls(string word)
         {
             if (string.IsNullOrEmpty(state))
             {
                 List<string> json = new List<string>();
                 try
                 {
-                    CloudTable urlTable = CreateTable("websitetable");
-                    TableQuery<UriEntity> query = new TableQuery<UriEntity>()
-                        .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, site));
-                    foreach (UriEntity entity in urlTable.ExecuteQuery(query))
+                    string[] words = word.Split(' ');
+                    foreach (string part in words)
                     {
-                        json.Add(entity.RowKey);
+                        CloudTable urlTable = CreateTable("websitetable");
+                        TableQuery<UriEntity> query = new TableQuery<UriEntity>()
+                            .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, word));
+                        foreach (UriEntity entity in urlTable.ExecuteQuery(query))
+                        {
+                            if (!json.Contains(entity.RowKey))
+                                json.Add(entity.RowKey);
+                        }
                     }
                     return new JavaScriptSerializer().Serialize(json.ToArray());
                 }

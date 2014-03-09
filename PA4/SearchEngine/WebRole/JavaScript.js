@@ -114,9 +114,9 @@ function lastCallback(result) {
 
 $(function () {
 
-    $('#queryForm').submit(function () {
+    $('#submitButton').click(function () {
         ReturnUrls();
-        return false;
+        Jsonp();
     });
 
 }); //doc ready()
@@ -153,9 +153,9 @@ function SearchTrie() {
     }
 }
 
-function ReturnUrls()
-{
+function ReturnUrls() {
     var text = $("#prefix").val();
+    alert("returning urls for " + text);
     $.ajax({
         type: "POST",
         url: "WebService.asmx/PageUrls",
@@ -163,20 +163,35 @@ function ReturnUrls()
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
+            alert("success");
             var idx;
             var template = $('.template');
-            var suggestions = $('.urls');
-            suggestions.empty();
+            var container = $('.urls');
+            container.empty();
             var results = JSON.parse(data["d"]);
             for (idx = 0; idx < results.length; ++idx) {
                 instance = template.clone();
                 instance.find('.result').html(results[idx]);
                 instance.removeClass('template');
-                suggestions.fadeIn(500).append(instance);
+                container.fadeIn(500).append(instance);
+
             }
         },
         error: function (data) {
+            alert("fail");
             $('.urls').empty();
         }
+    });
+}
+
+function Jsonp() {
+
+    $.ajax({
+        crossDomain: true,
+        contentType: "application.json; charset=utf-8",
+        url: "http://jdgjsonp.azurewebsites.net/webservice.asmx/getOneLessThanN",
+        data: { n: 11 },
+        dataType: "jsonp",
+        success: updateResults
     });
 }
