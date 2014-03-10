@@ -9,13 +9,15 @@ namespace WorkerRole
 {
     public class UriEntity : TableEntity
     {
-        public UriEntity(string name, string url, string date)
+        public UriEntity(string name, string url, string link, string date)
         {
             this.PartitionKey = name;
             this.RowKey = url;
             this.Date = date;
+            this.Link = link;
         }
         public UriEntity() { }
+        public string Link { get; set; }
         public string Date { get; set; }
     }
 }

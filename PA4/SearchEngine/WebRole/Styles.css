@@ -10,3 +10,8 @@
 { 
     font: 8pt Trebuchet MS;
 }
+
+.hide
+{
+    display: none;
+}

@@ -34,6 +34,7 @@ namespace WebRole
         private static string state;
         private static string line;
         private static int count;
+        private static Dictionary<string, List<string>> cache;
 
         [WebMethod]
         public void preprocessFile(string input, string output)
@@ -133,6 +134,7 @@ namespace WebRole
         [WebMethod]
         public string StartCrawling(string website)
         {
+            cache = new Dictionary<string, List<string>>();
             try
             {
                 CloudQueue commandQueue = CreateQueue("commandqueue");
@@ -160,7 +162,7 @@ namespace WebRole
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public string PageUrls(string word)
         {
-            if (string.IsNullOrEmpty(state))
+            if (!cache.ContainsKey(word))
             {
                 List<string> json = new List<string>();
                 try
@@ -173,19 +175,20 @@ namespace WebRole
                             .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, word));
                         foreach (UriEntity entity in urlTable.ExecuteQuery(query))
                         {
-                            if (!json.Contains(entity.RowKey))
-                                json.Add(entity.RowKey);
+                            if (!json.Contains(entity.Link))
+                                json.Add(entity.Link);
                         }
                     }
+                    cache.Add(word, json);
                     return new JavaScriptSerializer().Serialize(json.ToArray());
                 }
                 catch
                 {
-                    return new JavaScriptSerializer().Serialize(json.ToArray());
+                    return null;
                 }
             }
             else
-                return "Can not retrieve data at this time";
+                return new JavaScriptSerializer().Serialize(cache[word].ToArray());
         }
 
         [WebMethod]

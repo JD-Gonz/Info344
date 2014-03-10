@@ -71,7 +71,7 @@ namespace WorkerRole
                                 string[] titles = fullTitle.Split(' ');
                                 foreach (string title in titles)
                                 {
-                                    UriEntity link = new UriEntity(title, HttpUtility.UrlEncode(website.AbsoluteUri), crawler.getDate(website));
+                                    UriEntity link = new UriEntity(title, HttpUtility.UrlEncode(website.AbsoluteUri), website.AbsoluteUri, crawler.getDate(website));
                                     TableOperation insert = TableOperation.InsertOrReplace(link);
                                     webTable.Execute(insert);
                                 }  
@@ -203,14 +203,17 @@ namespace WorkerRole
         private string preProccess (string title)
         {
             string reconstructedline = "";
-            foreach (char letter in title)
+            if (title != null)
             {
-                if (letter == '_')
-                    reconstructedline += " ";
-                else if (letter == 32 || letter == 46 || (letter > 65 && letter < 90) || (letter > 97 && letter < 122))
+                foreach (char letter in title)
                 {
-                    reconstructedline += letter;
-                }   
+                    if (letter == '_')
+                        reconstructedline += " ";
+                    else if (letter == 32 || letter == 46 || (letter > 65 && letter < 90) || (letter > 97 && letter < 122))
+                    {
+                        reconstructedline += letter;
+                    }
+                }
             }
             return reconstructedline;
         }

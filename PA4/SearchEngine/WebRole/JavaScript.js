@@ -115,8 +115,8 @@ function lastCallback(result) {
 $(function () {
 
     $('#submitButton').click(function () {
-        ReturnUrls();
         Jsonp();
+        ReturnUrls();
     });
 
 }); //doc ready()
@@ -155,7 +155,6 @@ function SearchTrie() {
 
 function ReturnUrls() {
     var text = $("#prefix").val();
-    alert("returning urls for " + text);
     $.ajax({
         type: "POST",
         url: "WebService.asmx/PageUrls",
@@ -163,7 +162,6 @@ function ReturnUrls() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
-            alert("success");
             var idx;
             var template = $('.template');
             var container = $('.urls');
@@ -178,20 +176,27 @@ function ReturnUrls() {
             }
         },
         error: function (data) {
-            alert("fail");
             $('.urls').empty();
         }
     });
 }
 
 function Jsonp() {
-
-    $.ajax({
-        crossDomain: true,
-        contentType: "application.json; charset=utf-8",
-        url: "http://jdgjsonp.azurewebsites.net/webservice.asmx/getOneLessThanN",
-        data: { n: 11 },
-        dataType: "jsonp",
-        success: updateResults
+    var text = $("#prefix").val();
+    var template = $('.bbtemplate');
+    var container = $('.bballContainer');
+    container.empty();
+    $.getJSON('http://ec2-54-186-26-1.us-west-2.compute.amazonaws.com/jsonp.php?callback=?', 'name=' + text, function (res) {
+        var playerStats = JSON.stringify(res).replace('[', '').replace(']','');
+        var player = JSON.parse(playerStats);
+            instance = template.clone();
+            instance.find('.PlayerName').html(player['PlayerName']);
+            instance.find('.GP').html(player['GP']);
+            instance.find('.FGP').html(player['FGP']);
+            instance.find('.TPP').html(player['TPP']);
+            instance.find('.FTP').html(player['FTP']);
+            instance.find('.PPG').html(player['PPG']);
+            instance.removeClass('bbtemplate');
+            container.fadeIn(500).replaceWith(instance);
     });
 }
