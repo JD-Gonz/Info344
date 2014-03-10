@@ -1,0 +1,20 @@
+﻿body 
+{  
+    padding-top: 25px;
+    text-align: center 
+}
+
+.suggestions 
+{
+    height: 275px;
+}
+
+.bballContainer
+{
+    height: 150px;
+}
+
+.hide
+{
+    display: none;
+}

@@ -1,0 +1,22 @@
+﻿<?php
+$name = $_POST["name"];
+$username = "info344user";
+$password = "Godspeed23";
+
+// Connects to Database and reform query
+try {
+	$conn = new PDO('mysql:host=info344.cf9rvll9cbvo.us-west-2.rds.amazonaws.com:3306;dbname=mydb', $username, $password);
+	$stmt = $conn->prepare("SELECT * FROM PlayerStats WHERE PlayerName like '%$name%'");
+	$stmt -> execute(array());
+} catch(PDOException $e) {
+	echo 'ERROR: ' . $e->getMessage();
+}
+?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+
+</body>
+</html>

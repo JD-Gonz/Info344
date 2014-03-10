@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Suggestions?</title>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="Styles.css">
+</head>
+<body>
+    <div class="container center">
+
+        <div class="input-group col-md-6 col-md-offset-3">
+            <input type="text" class="form-control" id="prefix" placeholder="Enter A Query" onkeyup="SearchTrie()">
+            <span class="input-group-btn">
+                <button type="button" name="submitButton" id="submitButton" class="btn btn-default search-button">Search</button>
+            </span>
+        </div>
+
+            <!-- containers-->
+            <div class="suggestions" id="results"></div>
+            <hr>
+        <div class="row">
+            <div class="col-md-10">
+                <h4>Basketball Player Results</h4>
+                <div class="bballContainer">
+                    <div class="bballPlayer" id="bballPlayer"></div>
+                </div>
+                <hr>
+                <h4>URLs Results</h4>
+                <div class="urls" id="websiteUrls"></div>
+            </div>
+            <div class="col-md-2">
+                    <script type='text/javascript' src='http://ads1.qadabra.com/t?id=bb2438e3-6ce8-4d32-875d-538ee1765c92&size=160x600'></script>
+            </div>
+        </div>
+            
+        </div>
+
+    <!-- templates-->
+    <div class="hide">
+        <div class="template">
+            <p><span class="result center"></span></p>
+        </div>
+        <div class="bbtemplate">
+                <p>Player Name: <span class="PlayerName"></span></p>
+               <p> Games Played: <span class="GP"></span></p>
+                <p>Field Goal Percentage: <span class="FGP"></span>%</p>
+                <p>Three Point Percentage: <span class="TPP"></span>%</p>
+                <p>Free Throw Percentage: <span class="FTP"></span>%</p>
+                <p>Points Per Game: <span class="PPG"></span></p>
+        </div>
+    </div>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="JavaScript.js"></script>
+</body>
+</html>
