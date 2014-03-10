@@ -1,14 +1,17 @@
 ﻿body 
 {  
-    font: 11pt Trebuchet MS;
-    font-color: #000000;
-    padding-top: 72px;
+    padding-top: 25px;
     text-align: center 
 }
 
-.text 
-{ 
-    font: 8pt Trebuchet MS;
+.suggestions 
+{
+    height: 275px;
+}
+
+.bballContainer
+{
+    height: 150px;
 }
 
 .hide

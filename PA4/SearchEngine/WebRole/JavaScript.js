@@ -197,6 +197,6 @@ function Jsonp() {
             instance.find('.FTP').html(player['FTP']);
             instance.find('.PPG').html(player['PPG']);
             instance.removeClass('bbtemplate');
-            container.fadeIn(500).replaceWith(instance);
+            container.fadeIn(500).append(instance);
     });
 }
