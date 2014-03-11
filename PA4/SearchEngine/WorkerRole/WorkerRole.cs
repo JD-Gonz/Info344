@@ -33,11 +33,15 @@ namespace WorkerRole
         {
             // This is a sample worker implementation. Replace with your logic.
             Trace.TraceInformation("WorkerRole1 entry point called", "Information");
-
-
-
+            int count = 0;
             while (true)
             {
+                count++;
+                if (count > 15)
+                {
+                    new WebClient().OpenRead("http://jdgsearch.cloudapp.net");
+                    count = 0;
+                }
                 Thread.Sleep(500);
                 Trace.TraceInformation("Working", "Information");
                 CloudQueueMessage command = commandQueue.GetMessage();
@@ -47,6 +51,7 @@ namespace WorkerRole
                     if (url != null)
                     {
                         state = "Crawling";
+
                         webQueue.DeleteMessage(url);
                         Uri website = new UriBuilder(url.AsString.Replace("www.", "")).Uri;
                         if (website.ToString().Contains("sitemaps"))

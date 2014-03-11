@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SearchEngine" generation="1" functional="0" release="0" Id="33217dce-16b7-4f92-9268-568c3a4aa180" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
+<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SearchEngine" generation="1" functional="0" release="0" Id="ff2bd69b-e15c-4bbf-a668-2099bce703c0" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
   <groups>
     <group name="SearchEngineGroup" generation="1" functional="0" release="0">
       <componentports>
@@ -110,9 +110,9 @@
     </group>
   </groups>
   <implements>
-    <implementation Id="5b59740b-223e-4a8d-bc60-d728f950a168" ref="Microsoft.RedDog.Contract\ServiceContract\SearchEngineContract@ServiceDefinition">
+    <implementation Id="ab0c1f9f-0b84-4307-aabb-67351c93392f" ref="Microsoft.RedDog.Contract\ServiceContract\SearchEngineContract@ServiceDefinition">
       <interfacereferences>
-        <interfaceReference Id="efdef5f4-dc04-430e-806a-456550ada5d6" ref="Microsoft.RedDog.Contract\Interface\WebRole:Endpoint1@ServiceDefinition">
+        <interfaceReference Id="4534aa68-e158-4432-ace6-4d6cacc1f5e4" ref="Microsoft.RedDog.Contract\Interface\WebRole:Endpoint1@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/SearchEngine/SearchEngineGroup/WebRole:Endpoint1" />
           </inPort>

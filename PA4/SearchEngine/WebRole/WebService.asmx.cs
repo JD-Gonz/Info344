@@ -99,7 +99,7 @@ namespace WebRole
             {
                 while ((line = sr.ReadLine()) != null)
                 {
-                    if (count % 10000 == 0 && ram.NextValue() <= 50)
+                    if (count % 10000 == 0 && ram.NextValue() <= 25)
                         break;
                     count++;
                     library.insertLine(line.ToLower());
