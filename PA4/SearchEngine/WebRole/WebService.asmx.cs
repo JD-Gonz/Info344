@@ -4,6 +4,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
@@ -34,7 +35,7 @@ namespace WebRole
         private static string state;
         private static string line;
         private static int count;
-        private static Dictionary<string, List<string>> cache;
+        private static Hashtable cache;
 
         [WebMethod]
         public void preprocessFile(string input, string output)
@@ -134,7 +135,7 @@ namespace WebRole
         [WebMethod]
         public string StartCrawling(string website)
         {
-            cache = new Dictionary<string, List<string>>();
+            cache = new Hashtable();
             try
             {
                 CloudQueue commandQueue = CreateQueue("commandqueue");
@@ -164,7 +165,7 @@ namespace WebRole
         {
             if (!cache.ContainsKey(word))
             {
-                List<string> json = new List<string>();
+                Dictionary<string, Tuple<int, UriEntity>> json = new Dictionary<string, Tuple<int, UriEntity>>();    // key = url, value = #times sceen
                 try
                 {
                     string[] words = word.Split(' ');
@@ -175,12 +176,26 @@ namespace WebRole
                             .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, word));
                         foreach (UriEntity entity in urlTable.ExecuteQuery(query))
                         {
-                            if (!json.Contains(entity.Link))
-                                json.Add(entity.Link);
+                            if (json.ContainsKey(entity.Link))
+                                json[entity.Link] = new Tuple<int, UriEntity>(json[entity.Link].Item1 + 1, json[entity.Link].Item2);
+                            else
+                                json.Add(entity.Link, new Tuple<int, UriEntity>(1, entity));
                         }
                     }
-                    cache.Add(word, json);
-                    return new JavaScriptSerializer().Serialize(json.ToArray());
+                    var urlsSortedByCount = json.Select(x => new Tuple<UriEntity, int>(x.Value.Item2, x.Value.Item1))
+                    .OrderByDescending(x => x.Item2)
+                    .ThenByDescending(x => x.Item1.Date)
+                    .ToArray();
+
+                    List<string> foundArticles = new List<string>();
+                    foreach (var entityTuple in urlsSortedByCount)
+                    {
+                        string url = entityTuple.Item1.Link;
+                        if (foundArticles.Contains(url) == false)
+                            foundArticles.Add(url);
+                    }
+                    cache.Add(word, foundArticles.ToArray());
+                    return new JavaScriptSerializer().Serialize(foundArticles.ToArray());
                 }
                 catch
                 {
@@ -188,7 +203,7 @@ namespace WebRole
                 }
             }
             else
-                return new JavaScriptSerializer().Serialize(cache[word].ToArray());
+                return new JavaScriptSerializer().Serialize(cache[word]);
         }
 
         [WebMethod]

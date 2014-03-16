@@ -9,8 +9,8 @@
     <AzureEnableRemoteDesktop>True</AzureEnableRemoteDesktop>
     <AzureEnableWebDeploy>False</AzureEnableWebDeploy>
     <AzureFallbackToDeleteAndRecreateIfUpgradeFails>False</AzureFallbackToDeleteAndRecreateIfUpgradeFails>
-    <AzureHostedServiceLabel>jdgsearch</AzureHostedServiceLabel>
-    <AzureHostedServiceName>jdgsearch</AzureHostedServiceName>
+    <AzureHostedServiceLabel>newgle</AzureHostedServiceLabel>
+    <AzureHostedServiceName>newgle</AzureHostedServiceName>
     <AzureEnableIntelliTrace>False</AzureEnableIntelliTrace>
     <AzureEnableProfiling>False</AzureEnableProfiling>
     <AzureServiceConfiguration>Cloud</AzureServiceConfiguration>
